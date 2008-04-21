@@ -44,14 +44,23 @@ describe Answer, 'when creating' do
 
   it 'should recognize an answer initial paragraph' do
     Answer.is_an_answer_start?(H(@answer_initial_paragraph)).should be_true
+    Answer.is_an_answer_start?(H(@second_answer_initial_paragraph)).should be_true
+
+    [@answer_2nd_paragraph, @answer_3rd_paragraph, @column_break,
+      @second_answer_2nd_paragraph, @second_answer_3rd_paragraph].each do |element|
+      Answer.is_an_answer_start?(H(element)).should be_false
+    end
   end
 
   it 'should recognize a question introduction paragraph' do
     Answer.is_a_question_introduction?(H(@question_introduction)).should be_true
     Answer.is_a_question_introduction?(H(@second_question_introduction)).should be_true
 
-    Answer.is_a_question_introduction?(H(@answer_initial_paragraph)).should be_false
-    Answer.is_a_question_introduction?(H(@second_answer_initial_paragraph)).should be_false
+    [@answer_initial_paragraph, @second_answer_initial_paragraph,
+      @answer_2nd_paragraph, @answer_3rd_paragraph, @column_break,
+      @second_answer_2nd_paragraph, @second_answer_3rd_paragraph].each do |element|
+        Answer.is_a_question_introduction?(H(element)).should be_false
+    end
   end
 
   it 'should find answering member' do
@@ -148,7 +157,7 @@ describe Answer, 'when creating' do
           <!----> #{@answer_initial_paragraph_text}</p>|
     @answer_2nd_paragraph = %Q|<a name="80403w0001.htm_para0"></a><!--meta name="Speaker" CONTENT="Lord Rooker"-->
         <p><a name="wa_stpa_0"></a><a name="08040380000046"></a>Prior to the revision of fees in 2005, no fees relating to the approval mechanism had been revised since 1991. It was proposed that the fees Order would be revised to start to recover the fees for testing. Since 2005, the price for each of the tests charged by the Veterinary Laboratories Agency has been revised and is based on the actual hours needed to perform the test by graded staff, together with the materials used: that is, the full economic cost. The prices reflect the complexity of the tests and difficulty of the methodologies.</p>|
-    @answer_3rd_paragraph1 = %Q|<a name="80403w0001.htm_para1"></a><!--meta name="Speaker" CONTENT="Lord Rooker"-->
+    @answer_3rd_paragraph = %Q|<a name="80403w0001.htm_para1"></a><!--meta name="Speaker" CONTENT="Lord Rooker"-->
         <p><a name="wa_stpa_1"></a><a name="08040380000047"></a>The Institute for Animal Health (IAH) is the only laboratory in the UK equipped to undertake efficacy testing of disinfectants against foot and mouth disease and swine vesicular disease testing. The IAH is also now required to recover the full economic cost of the testing service they provide. This has resulted in them needing to revise their fees, something they have not needed to do since 2005.</p>|
 
 
