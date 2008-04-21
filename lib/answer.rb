@@ -19,11 +19,13 @@ class Answer
 
       find_question_introductions(title_element).inject(answers) do |answers, question_introduction|
         question_text = find_question_text(question_introduction)
+        answer_initial_paragraph = find_answer_initial_paragraph(question_introduction)
 
         answers << Answer.new({ :title => title,
             :asking_member => find_asking_member(question_introduction),
             :question => question_text,
-            :question_id => find_question_id(question_text) })
+            :question_id => find_question_id(question_text),
+            :answering_member => find_answering_member(answer_initial_paragraph)})
       end
     end
   end
@@ -58,6 +60,14 @@ class Answer
 
   def self.find_question_id question_text
     question_text[/\[(.*)\]$/, 1]
+  end
+
+  def self.find_answering_member element
+    element.at('b').inner_text.to_s.strip.chomp(':')
+  end
+
+  def self.find_answer_initial_paragraph element
+    element.next_sibling.next_sibling
   end
 
   def initialize attributes

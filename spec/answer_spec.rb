@@ -50,6 +50,16 @@ describe Answer, 'when creating' do
     Answer.is_a_question_introduction?(H(@second_answer_initial_paragraph)).should be_false
   end
 
+  it 'should find answering member' do
+    Answer.find_answering_member(H(@answer_initial_paragraph)).should == @answering_member
+    Answer.find_answering_member(H(@second_answer_initial_paragraph)).should == @second_answering_member
+  end
+
+  it 'should find answer initial paragraph' do
+    p = H(@question_introduction+@question+@answer_initial_paragraph).at('p')
+    Answer.find_answer_initial_paragraph(p).inner_text.should include(@answer_initial_paragraph_text)
+  end
+
   it 'should create Answer instance from Hpricot document with two answers' do
     answer = "#{@question_introduction}#{@question}#{@answer_initial_paragraph}"
     second_answer = "#{@second_question_introduction}#{@second_question}#{@second_answer_initial_paragraph}"
@@ -62,11 +72,13 @@ describe Answer, 'when creating' do
     answer.title.should == @title_text
     answer.asking_member.should == @asking_member
     answer.question_id.should == @question_id
+    answer.answering_member.should == @answering_member
 
     answer2 = answers[1]
     answer2.title.should == @title_text
     answer2.asking_member.should == @second_asking_member
     answer2.question_id.should == @second_question_id
+    answer2.answering_member.should == @second_answering_member
   end
 
   it 'should create Answer instance from url' do
@@ -114,14 +126,17 @@ describe Answer, 'when creating' do
       <p><a name="wa_qnpa_0">#{@question_text}</a></p>
     </ul>|
 
+    @answering_member = %Q|The Minister of State, Department for Environment, Food and Rural Affairs (Lord Rooker)|
+
+    @answer_initial_paragraph_text = %Q|It is government policy that regulatory and approval regimes should be cost-neutral and that regulatory bodies charge appropriate fees.|
     @answer_initial_paragraph = %Q|<p><a name="wa_st_0"></a>
       <!--meta name="Colno" CONTENT="189"-->
       <a name="08040380000045"></a>
       <b><a name="80403w0001.htm_spmin0"></a>
         <b><a name="80403w0001.htm_spmin1"></a>
-          <a name="08040380000425"></a>The Minister of State, Department for Environment, Food and Rural Affairs (Lord Rooker):</b>
+        <a name="08040380000425"></a>#{@answering_member}:</b>
         <!--Lord Rooker--></b>
-      <!----> It is government policy that regulatory and approval regimes should be cost-neutral and that regulatory bodies charge appropriate fees.</p>|
+          <!----> #{@answer_initial_paragraph_text}</p>|
     @answer_2nd_paragraph = %Q|<a name="80403w0001.htm_para0"></a><!--meta name="Speaker" CONTENT="Lord Rooker"-->
         <p><a name="wa_stpa_0"></a><a name="08040380000046"></a>Prior to the revision of fees in 2005, no fees relating to the approval mechanism had been revised since 1991. It was proposed that the fees Order would be revised to start to recover the fees for testing. Since 2005, the price for each of the tests charged by the Veterinary Laboratories Agency has been revised and is based on the actual hours needed to perform the test by graded staff, together with the materials used: that is, the full economic cost. The prices reflect the complexity of the tests and difficulty of the methodologies.</p>|
     @answer_3rd_paragraph1 = %Q|<a name="80403w0001.htm_para1"></a><!--meta name="Speaker" CONTENT="Lord Rooker"-->
@@ -147,13 +162,14 @@ describe Answer, 'when creating' do
         <p><a name="wa_qnpa_1"></a>#{@second_question_text}</p>
       </ul>|
 
+    @second_answering_member = 'Lord Rooker'
     @second_answer_initial_paragraph = %Q|<p>
       <a name="wa_st_1"></a>
       <!--meta name="Colno" CONTENT="189"-->
       <a name="08040380000049"></a>
       <b><a name="80403w0001.htm_spnew4"></a><b>
       <a name="80403w0001.htm_spnew5"></a>
-      <a name="08040380000427"></a>Lord Rooker:</b><!--Lord Rooker--></b><!----> It is government policy that regulatory and approval regimes are cost-neutral and that regulatory bodies charge appropriate fees. It is not considered appropriate for Defra and the taxpayer to subsidise the mechanism when manufacturers in industry benefit from the sale of their products.</p>|
+      <a name="08040380000427"></a>#{@second_answering_member}:</b><!--Lord Rooker--></b><!----> It is government policy that regulatory and approval regimes are cost-neutral and that regulatory bodies charge appropriate fees. It is not considered appropriate for Defra and the taxpayer to subsidise the mechanism when manufacturers in industry benefit from the sale of their products.</p>|
 
     @second_answer_2nd_paragraph = %Q|<a name="80403w0001.htm_para2"></a>
       <!--meta name="Speaker" CONTENT="Lord Rooker"-->
