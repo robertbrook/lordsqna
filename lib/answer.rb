@@ -84,6 +84,19 @@ class Answer
     paragraph
   end
 
+  def self.is_a_non_initial_answer_paragraph? element
+    contains_named_anchor element, /^wa_stpa_\d+$/
+  end
+
+  def self.find_answer_paragraphs initial_answer_paragraph
+    paragraphs = [initial_answer_paragraph]
+    element = initial_answer_paragraph
+    while (element = element.next_sibling) && !is_an_answer_start?(element)
+      paragraphs << element if is_a_non_initial_answer_paragraph?(element)
+    end
+    paragraphs
+  end
+
   private
 
     def self.contains_named_anchor element, pattern
