@@ -18,13 +18,13 @@ describe Answer, 'when creating' do
   end
 
   it 'should find asking member' do
-    h3 = H(@title+@question_introduction).at('h3')
-    Answer.find_asking_member(h3).should == @asking_member
+    p = H(@question_introduction)
+    Answer.find_asking_member(p).should == @asking_member
   end
 
   it 'should find question text' do
-    h3 = H(@title+@question_introduction+@question).at('h3')
-    Answer.find_question_text(h3).should == @question_text
+    p = H(@question_introduction+@question).at('p')
+    Answer.find_question_text(p).should == @question_text
   end
 
   it 'should find question number' do
@@ -43,22 +43,30 @@ describe Answer, 'when creating' do
   end
 
   it 'should recognize a question introduction paragraph' do
-    Answer.is_a_question_introduction(H(@question_introduction)).should be_true
-    Answer.is_a_question_introduction(H(@second_question_introduction)).should be_true
+    Answer.is_a_question_introduction?(H(@question_introduction)).should be_true
+    Answer.is_a_question_introduction?(H(@second_question_introduction)).should be_true
 
-    Answer.is_a_question_introduction(H(@answer_initial_paragraph)).should be_false
-    Answer.is_a_question_introduction(H(@second_answer_initial_paragraph)).should be_false
+    Answer.is_a_question_introduction?(H(@answer_initial_paragraph)).should be_false
+    Answer.is_a_question_introduction?(H(@second_answer_initial_paragraph)).should be_false
   end
 
-  it 'should create Answer instance from Hpricot document' do
-    html = H("<html>#{@title}#{@question_introduction}#{@question}</html>")
+  it 'should create Answer instance from Hpricot document with two answers' do
+    answer = "#{@question_introduction}#{@question}#{@answer_initial_paragraph}"
+    second_answer = "#{@second_question_introduction}#{@second_question}#{@second_answer_initial_paragraph}"
+    html = H("<html>#{@title}#{answer}#{second_answer}</html>")
+
     answers = Answer.from_doc html
-    answers.size.should == 1
+    answers.size.should == 2
     answer = answers.first
     answer.should be_an_instance_of(Answer)
     answer.title.should == @title_text
     answer.asking_member.should == @asking_member
     answer.question_id.should == @question_id
+
+    answer2 = answers[1]
+    answer2.title.should == @title_text
+    answer2.asking_member.should == @second_asking_member
+    answer2.question_id.should == @second_question_id
   end
 
   it 'should create Answer instance from url' do

@@ -14,24 +14,28 @@ class Answer
   def self.from_doc doc
     title_elements = find_title_elements(doc)
 
-    title_elements.inject([]) do |answers, element|
-      question_text = find_question_text(element)
+    title_elements.inject([]) do |answers, title_element|
+      title = find_title_text(title_element)
 
-      answers << Answer.new({ :title => find_title_text(element),
-          :asking_member => find_asking_member(element),
-          :question => question_text,
-          :question_id => find_question_id(question_text) })
+      find_question_introductions(title_element).inject(answers) do |answers, question_introduction|
+        question_text = find_question_text(question_introduction)
+
+        answers << Answer.new({ :title => title,
+            :asking_member => find_asking_member(question_introduction),
+            :question => question_text,
+            :question_id => find_question_id(question_text) })
+      end
     end
   end
 
-  def self.is_a_question_introduction element
+  def self.is_a_question_introduction? element
     (a = element.at('a')) && (name = a.attributes['name']) && !name.to_s[/^wa_qn_\d+$/].nil?
   end
 
   def self.find_question_introductions element
     introductions = []
     while (element = element.next_sibling) && (element.name != 'h3')
-      introductions << element if is_a_question_introduction element
+      introductions << element if is_a_question_introduction? element
     end
     introductions
   end
@@ -45,11 +49,11 @@ class Answer
   end
 
   def self.find_asking_member element
-    element.next_sibling.at('b/b').inner_text.to_s.strip
+    element.at('b/b').inner_text.to_s.strip
   end
 
   def self.find_question_text element
-    element.next_sibling.next_sibling.at('p').inner_text.to_s
+    element.next_sibling.at('p').inner_text.to_s
   end
 
   def self.find_question_id question_text
