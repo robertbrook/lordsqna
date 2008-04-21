@@ -11,6 +11,10 @@ class Answer
     from_doc doc
   end
 
+  def initialize attributes
+    morph(attributes)
+  end
+
   def self.from_doc doc
     title_elements = find_title_elements(doc)
 
@@ -31,7 +35,7 @@ class Answer
   end
 
   def self.is_a_question_introduction? element
-    (a = element.at('a')) && (name = a.attributes['name']) && !name.to_s[/^wa_qn_\d+$/].nil?
+    contains_named_anchor element, /^wa_qn_\d+$/
   end
 
   def self.find_question_introductions element
@@ -66,13 +70,24 @@ class Answer
     element.at('b').inner_text.to_s.strip.chomp(':')
   end
 
+  def self.is_an_answer_start? element
+    contains_named_anchor element, /^wa_st_\d+$/
+  end
+
   def self.find_answer_initial_paragraph element
-    element.next_sibling.next_sibling
+    paragraph = nil
+    while !paragraph && (element = element.next_sibling) && (element.name != 'h3')
+      if element.name == 'p' && is_an_answer_start?(element)
+        paragraph = element
+      end
+    end
+    paragraph
   end
 
-  def initialize attributes
-    morph(attributes)
-  end
+  private
+
+    def self.contains_named_anchor element, pattern
+      (a = element.at('a')) && (name = a.attributes['name']) && !name.to_s[pattern].nil?
+    end
+
 end
-
-

@@ -42,6 +42,10 @@ describe Answer, 'when creating' do
     introductions[1].inner_text.to_s.strip.should == "#{@second_asking_member} #{@asked_hmgov}"
   end
 
+  it 'should recognize an answer initial paragraph' do
+    Answer.is_an_answer_start?(H(@answer_initial_paragraph)).should be_true
+  end
+
   it 'should recognize a question introduction paragraph' do
     Answer.is_a_question_introduction?(H(@question_introduction)).should be_true
     Answer.is_a_question_introduction?(H(@second_question_introduction)).should be_true
@@ -57,6 +61,11 @@ describe Answer, 'when creating' do
 
   it 'should find answer initial paragraph' do
     p = H(@question_introduction+@question+@answer_initial_paragraph).at('p')
+    Answer.find_answer_initial_paragraph(p).inner_text.should include(@answer_initial_paragraph_text)
+  end
+
+  it 'should find answer initial paragraph when question and answer separated by column break' do
+    p = H(@question_introduction+@question+@column_break+@answer_initial_paragraph).at('p')
     Answer.find_answer_initial_paragraph(p).inner_text.should include(@answer_initial_paragraph_text)
   end
 
