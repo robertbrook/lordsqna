@@ -24,6 +24,18 @@ class Answer
     end
   end
 
+  def self.is_a_question_introduction element
+    (a = element.at('a')) && (name = a.attributes['name']) && !name.to_s[/^wa_qn_\d+$/].nil?
+  end
+
+  def self.find_question_introductions element
+    introductions = []
+    while (element = element.next_sibling) && (element.name != 'h3')
+      introductions << element if is_a_question_introduction element
+    end
+    introductions
+  end
+
   def self.find_title_elements doc
     (doc/'h3').delete_if {|h| h.inner_text.to_s[/written answers/i]}
   end
