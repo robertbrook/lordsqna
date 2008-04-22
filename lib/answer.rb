@@ -32,6 +32,7 @@ class Answer
             :asking_member => find_asking_member(question_introduction),
             :question => question_text,
             :question_id => find_question_id(question_text),
+            :answering_role => find_answering_role(answer_initial_paragraph),
             :answering_member => find_answering_member(answer_initial_paragraph),
             :answer_paragraphs => paragraphs
         })
@@ -72,7 +73,13 @@ class Answer
   end
 
   def self.find_answering_member element
-    element.at('b').inner_text.to_s.strip.chomp(':')
+    name = find_answering_name element
+    name[/\((.+)\)/, 1] || name
+  end
+
+  def self.find_answering_role element
+    name = find_answering_name element
+    name[/(.*)\s+\(.+\)/, 1]
   end
 
   def self.is_an_answer_start? element
@@ -107,7 +114,7 @@ class Answer
 
     unless paragraphs.empty?
       text = paragraphs.first
-      text.sub!( find_answering_member(answer_initial_paragraph), '')
+      text.sub!( find_answering_name(answer_initial_paragraph), '')
       text.strip!
       text.sub!(/^:/,'')
       text.strip!
@@ -121,4 +128,7 @@ class Answer
       (a = element.at('a')) && (name = a.attributes['name']) && !name.to_s[pattern].nil?
     end
 
+    def self.find_answering_name element
+      element.at('b').inner_text.to_s.strip.chomp(':').strip
+    end
 end

@@ -72,6 +72,11 @@ describe Answer, 'when creating' do
     assert_question_introduction_false @second_answer_3rd_paragraph
   end
 
+  it 'should find answering role' do
+    Answer.find_answering_role(H(@answer_initial_paragraph)).should == @answering_role
+    Answer.find_answering_role(H(@second_answer_initial_paragraph)).should == nil
+  end
+
   it 'should find answering member' do
     Answer.find_answering_member(H(@answer_initial_paragraph)).should == @answering_member
     Answer.find_answering_member(H(@second_answer_initial_paragraph)).should == @second_answering_member
@@ -120,6 +125,7 @@ describe Answer, 'when creating' do
     answer.asking_member.should == @asking_member
     answer.question_id.should == @question_id
     answer.answering_member.should == @answering_member
+    answer.answering_role.should == @answering_role
     answer.answer_paragraphs.should == "<p>#{@answer_initial_paragraph_text}</p><p>#{@answer_2nd_paragraph_text}</p><p>#{@answer_3rd_paragraph_text}</p>"
 
     answer2 = answers[1]
@@ -127,6 +133,7 @@ describe Answer, 'when creating' do
     answer2.asking_member.should == @second_asking_member
     answer2.question_id.should == @second_question_id
     answer2.answering_member.should == @second_answering_member
+    answer2.answering_role.should == nil
     answer2.answer_paragraphs.should == "<p>#{@second_answer_initial_paragraph_text}</p><p>#{@second_answer_2nd_paragraph_text}</p><p>#{@second_answer_3rd_paragraph_text}</p>"
   end
 
@@ -195,7 +202,9 @@ describe Answer, 'when creating' do
       <p><a name="wa_qnpa_0">#{@question_text}</a></p>
     </ul>|
 
-    @answering_member = %Q|The Minister of State, Department for Environment, Food and Rural Affairs (Lord Rooker)|
+    @answering_role = 'The Minister of State, Department for Environment, Food and Rural Affairs'
+    @answering_member = 'Lord Rooker'
+    @answering_name = %Q|#{@answering_role} (#{@answering_member})|
 
     @answer_initial_paragraph_text = %Q|It is government policy that regulatory and approval regimes should be cost-neutral and that regulatory bodies charge appropriate fees.|
     @answer_2nd_paragraph_text = %Q|Prior to the revision of fees in 2005, no fees relating to the approval mechanism had been revised since 1991. It was proposed that the fees Order would be revised to start to recover the fees for testing. Since 2005, the price for each of the tests charged by the Veterinary Laboratories Agency has been revised and is based on the actual hours needed to perform the test by graded staff, together with the materials used: that is, the full economic cost. The prices reflect the complexity of the tests and difficulty of the methodologies.|
@@ -206,7 +215,7 @@ describe Answer, 'when creating' do
       <a name="08040380000045"></a>
       <b><a name="80403w0001.htm_spmin0"></a>
         <b><a name="80403w0001.htm_spmin1"></a>
-        <a name="08040380000425"></a>#{@answering_member}:</b>
+        <a name="08040380000425"></a>#{@answering_name}:</b>
         <!--Lord Rooker--></b>
           <!----> #{@answer_initial_paragraph_text}</p>|
     @answer_2nd_paragraph = %Q|<a name="80403w0001.htm_para0"></a><!--meta name="Speaker" CONTENT="Lord Rooker"-->
