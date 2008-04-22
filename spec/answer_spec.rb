@@ -113,6 +113,13 @@ describe Answer, 'when creating' do
     paragraphs[2].should == @answer_3rd_paragraph_text
   end
 
+  it 'should find answer paragraph text, removing column break inside paragraph' do
+    p = H(@answer_paragraph_containing_column_break).at('p')
+    paragraphs = Answer.find_answer_paragraphs_text(p)
+    paragraphs.size.should == 1
+    paragraphs[0].should == "#{@text_before_col_break} #{@text_after_col_break}"
+  end
+
   it 'should create Answer instance from Hpricot document with two answers' do
     answer = "#{@question_introduction}#{@question}#{@answer_initial_paragraph}#{@answer_2nd_paragraph}#{@answer_3rd_paragraph}"
     second_answer = "#{@second_question_introduction}#{@second_question}#{@second_answer_initial_paragraph}#{@second_answer_2nd_paragraph}#{@second_answer_3rd_paragraph}"
@@ -276,5 +283,11 @@ describe Answer, 'when creating' do
       <b><a name="80403w0001.htm_spnew42"></a><b>
       <a name="80403w0001.htm_spnew43"></a>
       <a name="08040380000454"></a>Lord Harris of Haringey</b><!--Lord Harris of Haringey--></b><!----> asked the Chairman of Committees:</p>|
+
+    @text_before_col_break = 'In the last year, neither the Parliamentary Network nor parliamentary applications or servers that are'
+    @text_after_col_break = 'fully managed by PICT have been adversely affected by any malicious programmes. Any viruses detected are quarantined or removed by anti-virus software. Since January there have been 79 instances logged when single machines appeared to have been infected by malware but these incidents were contained on the individual machine. The malware was removed as soon as practicably possible.'
+    @answer_paragraph_containing_column_break = %Q|<p><a name="wa_st_16"></a>
+<!--meta name="Colno" CONTENT="194"--><a name="08040380000085"></a><b><a name="80403w0001.htm_spmin18"></a><b><a name="80403w0001.htm_spmin19"></a><a name="08040380000455"></a>The Chairman of Committees (Lord Brabazon of Tara):</b><!--Lord Brabazon of Tara--></b><!----> #{@text_before_col_break}
+<notus-date day="3" month="4" year="2008" textmonth="Apr"></notus-date><columnnum><br> <br><a name="column_WA195"></a><b>3 Apr 2008 : Column WA195</b><br> <br></columnnum>#{@text_after_col_break}</p>|
   end
 end

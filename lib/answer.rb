@@ -111,14 +111,25 @@ class Answer
   end
 
   def self.find_answer_paragraphs_text answer_initial_paragraph
-    paragraphs = find_answer_paragraphs(answer_initial_paragraph).collect {|p| p.inner_text.to_s.strip }
+    paragraphs = find_answer_paragraphs(answer_initial_paragraph).collect do |p|
+      (p/'columnnum').remove
+      text = p.inner_text.to_s
+      text.strip!
+      text.gsub!("\r",'')
+      text.gsub!("\n",' ')
+      text.squeeze!(' ')
+      text
+    end
 
     unless paragraphs.empty?
-      text = paragraphs.first
-      text.sub!( find_answering_name(answer_initial_paragraph), '')
-      text.strip!
-      text.sub!(/^:/,'')
-      text.strip!
+      answering_name = find_answering_name(answer_initial_paragraph)
+      if answering_name
+        text = paragraphs.first
+        text.sub!( answering_name, '')
+        text.strip!
+        text.sub!(/^:/,'')
+        text.strip!
+      end
     end
     paragraphs
   end
