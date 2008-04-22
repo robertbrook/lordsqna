@@ -2,10 +2,6 @@ require File.dirname(__FILE__) + '/../lib/answer'
 
 describe Answer, 'when creating' do
 
-  def H html
-    Hpricot html
-  end
-
   it 'should find any answer title elements' do
     title_elements = Answer.find_title_elements H("<html>#{@written_answers_title}#{@date}#{@title}</html>")
     title_elements.size.should == 1
@@ -52,44 +48,28 @@ describe Answer, 'when creating' do
     end
   end
 
-  def assert_non_initial_answer element, expected=be_true
-    Answer.is_a_non_initial_answer_paragraph?(element).should expected
-  end
-
-  def assert_not_non_initial_answer element
-    assert_non_initial_answer element, be_false
-  end
-
   it 'should recognize an non-initial answer paragraph' do
-    assert_non_initial_answer H(@answer_2nd_paragraph).at('p')
-    assert_non_initial_answer H(@answer_3rd_paragraph).at('p')
-    assert_non_initial_answer H(@second_answer_2nd_paragraph).at('p')
-    assert_non_initial_answer H(@second_answer_3rd_paragraph).at('p')
+    assert_non_initial_answer_true H(@answer_2nd_paragraph).at('p')
+    assert_non_initial_answer_true H(@answer_3rd_paragraph).at('p')
+    assert_non_initial_answer_true H(@second_answer_2nd_paragraph).at('p')
+    assert_non_initial_answer_true H(@second_answer_3rd_paragraph).at('p')
 
-    assert_not_non_initial_answer H(@answer_initial_paragraph)
-    assert_not_non_initial_answer H(@second_answer_initial_paragraph)
-    assert_not_non_initial_answer H(@column_break)
-  end
-
-  def assert_question_introduction element, expected=be_true
-    Answer.is_a_question_introduction?(H(element)).should expected
-  end
-
-  def assert_not_question_introduction element
-    assert_question_introduction element, be_false
+    assert_non_initial_answer_false H(@answer_initial_paragraph)
+    assert_non_initial_answer_false H(@second_answer_initial_paragraph)
+    assert_non_initial_answer_false H(@column_break)
   end
 
   it 'should recognize a question introduction paragraph' do
-    assert_question_introduction @question_introduction
-    assert_question_introduction @second_question_introduction
+    assert_question_introduction_true @question_introduction
+    assert_question_introduction_true @second_question_introduction
 
-    assert_not_question_introduction @answer_initial_paragraph
-    assert_not_question_introduction @second_answer_initial_paragraph
-    assert_not_question_introduction @answer_2nd_paragraph
-    assert_not_question_introduction @answer_3rd_paragraph
-    assert_not_question_introduction @column_break
-    assert_not_question_introduction @second_answer_2nd_paragraph
-    assert_not_question_introduction @second_answer_3rd_paragraph
+    assert_question_introduction_false @answer_initial_paragraph
+    assert_question_introduction_false @second_answer_initial_paragraph
+    assert_question_introduction_false @answer_2nd_paragraph
+    assert_question_introduction_false @answer_3rd_paragraph
+    assert_question_introduction_false @column_break
+    assert_question_introduction_false @second_answer_2nd_paragraph
+    assert_question_introduction_false @second_answer_3rd_paragraph
   end
 
   it 'should find answering member' do
@@ -107,7 +87,7 @@ describe Answer, 'when creating' do
     Answer.find_answer_initial_paragraph(p).inner_text.should include(@answer_initial_paragraph_text)
   end
 
-  it 'should find answer initial paragraph when question and answer separated by column break' do
+  it 'should find answer paragraphs' do
     p = H(@answer_initial_paragraph+@column_break+@answer_2nd_paragraph+@answer_3rd_paragraph+
         @second_question_introduction+@second_question+@second_answer_initial_paragraph+@second_answer_2nd_paragraph).at('p')
     paragraphs = Answer.find_answer_paragraphs(p)
@@ -117,9 +97,19 @@ describe Answer, 'when creating' do
     paragraphs[2].inner_text.to_s.should include(@answer_3rd_paragraph_text)
   end
 
+  it 'should find answer paragraphs text, removing speaker name from initial paragraph' do
+    p = H(@answer_initial_paragraph+@column_break+@answer_2nd_paragraph+@answer_3rd_paragraph+
+        @second_question_introduction+@second_question+@second_answer_initial_paragraph+@second_answer_2nd_paragraph).at('p')
+    paragraphs = Answer.find_answer_paragraphs_text(p)
+    paragraphs.size.should == 3
+    paragraphs[0].should == @answer_initial_paragraph_text
+    paragraphs[1].should == @answer_2nd_paragraph_text
+    paragraphs[2].should == @answer_3rd_paragraph_text
+  end
+
   it 'should create Answer instance from Hpricot document with two answers' do
-    answer = "#{@question_introduction}#{@question}#{@answer_initial_paragraph}"
-    second_answer = "#{@second_question_introduction}#{@second_question}#{@second_answer_initial_paragraph}"
+    answer = "#{@question_introduction}#{@question}#{@answer_initial_paragraph}#{@answer_2nd_paragraph}#{@answer_3rd_paragraph}"
+    second_answer = "#{@second_question_introduction}#{@second_question}#{@second_answer_initial_paragraph}#{@second_answer_2nd_paragraph}#{@second_answer_3rd_paragraph}"
     html = H("<html>#{@title}#{answer}#{second_answer}</html>")
 
     answers = Answer.from_doc html
@@ -130,12 +120,14 @@ describe Answer, 'when creating' do
     answer.asking_member.should == @asking_member
     answer.question_id.should == @question_id
     answer.answering_member.should == @answering_member
+    answer.answer_paragraphs.should == "<p>#{@answer_initial_paragraph_text}</p><p>#{@answer_2nd_paragraph_text}</p><p>#{@answer_3rd_paragraph_text}</p>"
 
     answer2 = answers[1]
     answer2.title.should == @title_text
     answer2.asking_member.should == @second_asking_member
     answer2.question_id.should == @second_question_id
     answer2.answering_member.should == @second_answering_member
+    answer2.answer_paragraphs.should == "<p>#{@second_answer_initial_paragraph_text}</p><p>#{@second_answer_2nd_paragraph_text}</p><p>#{@second_answer_3rd_paragraph_text}</p>"
   end
 
   it 'should create Answer instance from url' do
@@ -146,6 +138,26 @@ describe Answer, 'when creating' do
     Answer.should_receive(:Hpricot).with(html).and_return doc
     Answer.should_receive(:from_doc).with(doc)
     Answer.from_url url
+  end
+
+  def H html
+    Hpricot html
+  end
+
+  def assert_non_initial_answer_true element, expected=be_true
+    Answer.is_a_non_initial_answer_paragraph?(element).should expected
+  end
+
+  def assert_non_initial_answer_false element
+    assert_non_initial_answer_true element, be_false
+  end
+
+  def assert_question_introduction_true element, expected=be_true
+    Answer.is_a_question_introduction?(H(element)).should expected
+  end
+
+  def assert_question_introduction_false element
+    assert_question_introduction_true element, be_false
   end
 
   before :all do

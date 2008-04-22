@@ -25,11 +25,16 @@ class Answer
         question_text = find_question_text(question_introduction)
         answer_initial_paragraph = find_answer_initial_paragraph(question_introduction)
 
+        paragraph_texts = find_answer_paragraphs_text(answer_initial_paragraph)
+        paragraphs = "<p>#{ paragraph_texts.join('</p><p>') }</p>"
+
         answers << Answer.new({ :title => title,
             :asking_member => find_asking_member(question_introduction),
             :question => question_text,
             :question_id => find_question_id(question_text),
-            :answering_member => find_answering_member(answer_initial_paragraph)})
+            :answering_member => find_answering_member(answer_initial_paragraph),
+            :answer_paragraphs => paragraphs
+        })
       end
     end
   end
@@ -88,11 +93,24 @@ class Answer
     contains_named_anchor element, /^wa_stpa_\d+$/
   end
 
-  def self.find_answer_paragraphs initial_answer_paragraph
-    paragraphs = [initial_answer_paragraph]
-    element = initial_answer_paragraph
+  def self.find_answer_paragraphs answer_initial_paragraph
+    paragraphs = [answer_initial_paragraph]
+    element = answer_initial_paragraph
     while (element = element.next_sibling) && !is_an_answer_start?(element)
       paragraphs << element if is_a_non_initial_answer_paragraph?(element)
+    end
+    paragraphs
+  end
+
+  def self.find_answer_paragraphs_text answer_initial_paragraph
+    paragraphs = find_answer_paragraphs(answer_initial_paragraph).collect {|p| p.inner_text.to_s.strip }
+
+    unless paragraphs.empty?
+      text = paragraphs.first
+      text.sub!( find_answering_member(answer_initial_paragraph), '')
+      text.strip!
+      text.sub!(/^:/,'')
+      text.strip!
     end
     paragraphs
   end
