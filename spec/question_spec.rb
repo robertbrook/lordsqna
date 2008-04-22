@@ -29,8 +29,8 @@ describe Question, 'when creating' do
 
   it 'should create a Question instance for each question' do
     p = H(@question_introduction+@two_questions).at('p')
-    answer = mock('Answer')
-    questions = Question.create_questions(p, answer)
+
+    questions = Question.create_questions(p)
     questions.size.should == 2
 
     questions[0].asking_member.should == @asking_member
@@ -41,9 +41,6 @@ describe Question, 'when creating' do
 
     questions[0].question_text.should == @question1_text
     questions[1].question_text.should == @question2_text
-
-    questions[0].answer.should == answer
-    questions[1].answer.should == answer
   end
 
   it 'should find question introduction elements' do

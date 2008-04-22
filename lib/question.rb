@@ -8,7 +8,7 @@ class Question
     morph(attributes)
   end
 
-  def self.create_questions question_introduction, answer=nil
+  def self.create_questions question_introduction
     question_texts = Question.find_question_texts(question_introduction)
     question_ids = Question.find_question_ids(question_texts)
     questions = []
@@ -17,8 +17,7 @@ class Question
       questions << Question.new({
           :question_text => text,
           :question_id => question_ids[i],
-          :asking_member => Question.find_asking_member(question_introduction),
-          :answer => answer
+          :asking_member => Question.find_asking_member(question_introduction)
       })
     end
 

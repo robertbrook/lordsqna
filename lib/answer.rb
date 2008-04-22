@@ -37,7 +37,7 @@ class Answer
             :answer_paragraphs => paragraphs
         })
 
-        questions = Question.create_questions(question_introduction, answer)
+        questions = Question.create_questions(question_introduction)
 
         answer.questions = questions
         answers << answer

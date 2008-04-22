@@ -105,10 +105,10 @@ describe Answer, 'when creating' do
     html = H("<html>#{@title}#{answer}#{second_answer}</html>")
 
     questions1 = [mock('Question')]
-    Question.should_receive(:create_questions).with(html.at("a[@name='#{@question_css_name}']/.."), :anything).and_return questions1
+    Question.should_receive(:create_questions).with(html.at("a[@name='#{@question_css_name}']/..")).and_return questions1
 
     questions2 = [mock('Question2')]
-    Question.should_receive(:create_questions).with(html.at("a[@name='#{@second_question_css_name}']/.."), :anything).and_return questions2
+    Question.should_receive(:create_questions).with(html.at("a[@name='#{@second_question_css_name}']/..")).and_return questions2
 
     answers = Answer.from_doc html
     answers.size.should == 2
