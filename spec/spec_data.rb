@@ -18,7 +18,8 @@ def load_spec_data
 
   @asking_member = 'Lord Taylor of Holbeach'
 
-  @question_introduction = %Q|<p><a name="wa_qn_0"></a>
+  @question_css_name = %Q|wa_qn_0|
+  @question_introduction = %Q|<p><a name="#{@question_css_name}"></a>
     <!--meta name="Colno" CONTENT="189"-->
     <a name="80403w0001.htm_wqn0"></a>
     <a name="08040380000044"></a>
@@ -59,7 +60,8 @@ def load_spec_data
 
   @second_asking_member = %Q|Lord Taylor of Holbeach|
 
-  @second_question_introduction = %Q|<p><a name="wa_qn_1"></a>
+  @second_question_css_name = %Q|wa_qn_1|
+  @second_question_introduction = %Q|<p><a name="#{@second_question_css_name}"></a>
     <!--meta name="Colno" CONTENT="189"-->
     <a name="80403w0001.htm_wqn1"></a>
     <a name="08040380000048"></a>
@@ -115,8 +117,10 @@ def load_spec_data
 <!--meta name="Colno" CONTENT="194"--><a name="08040380000085"></a><b><a name="80403w0001.htm_spmin18"></a><b><a name="80403w0001.htm_spmin19"></a><a name="08040380000455"></a>The Chairman of Committees (Lord Brabazon of Tara):</b><!--Lord Brabazon of Tara--></b><!----> #{@text_before_col_break}
 <notus-date day="3" month="4" year="2008" textmonth="Apr"></notus-date><columnnum><br> <br><a name="column_WA195"></a><b>3 Apr 2008 : Column WA195</b><br> <br></columnnum>#{@text_after_col_break}</p>|
 
-  @question1_text = %Q|How much government funding is being allocated to the development of second-generation biofuels, including cellulosic ethanol, biobutanol and synthetic fuels from biomass; and [HL2711]|
-  @question2_text = %Q|Which biofuel research projects are receiving government funding. [HL2712]|
+  @question1_id = %Q|HL2711|
+  @question2_id = %Q|HL2712|
+  @question1_text = %Q|How much government funding is being allocated to the development of second-generation biofuels, including cellulosic ethanol, biobutanol and synthetic fuels from biomass; and [#{@question1_id}]|
+  @question2_text = %Q|Which biofuel research projects are receiving government funding. [#{@question2_id}]|
   @two_questions = %Q|<ul><a name="08040269000202"></a>
     <p><a name="wa_qnpa_16"></a>#{@question1_text}</p>
     </ul>

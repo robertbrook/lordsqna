@@ -28,17 +28,19 @@ class Answer
         paragraph_texts = find_answer_paragraphs_text(answer_initial_paragraph)
         paragraphs = make_paragraphs paragraph_texts
 
-        answers << Answer.new({
+        answer = Answer.new({
             :title => title,
             :major_title => find_major_title_text(title),
             :minor_title => find_minor_title_text(title),
-            :asking_member => Question.find_asking_member(question_introduction),
-            :question => question_texts.first,
-            :question_id => Question.find_question_ids(question_texts).first,
             :answering_role => find_answering_role(answer_initial_paragraph),
             :answering_member => find_answering_member(answer_initial_paragraph),
             :answer_paragraphs => paragraphs
         })
+
+        questions = Question.create_questions(question_introduction, answer)
+
+        answer.questions = questions
+        answers << answer
       end
     end
   end

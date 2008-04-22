@@ -104,6 +104,12 @@ describe Answer, 'when creating' do
     second_answer = "#{@second_question_introduction}#{@second_question}#{@second_answer_initial_paragraph}#{@second_answer_2nd_paragraph}#{@second_answer_3rd_paragraph}"
     html = H("<html>#{@title}#{answer}#{second_answer}</html>")
 
+    questions1 = [mock('Question')]
+    Question.should_receive(:create_questions).with(html.at("a[@name='#{@question_css_name}']/.."), :anything).and_return questions1
+
+    questions2 = [mock('Question2')]
+    Question.should_receive(:create_questions).with(html.at("a[@name='#{@second_question_css_name}']/.."), :anything).and_return questions2
+
     answers = Answer.from_doc html
     answers.size.should == 2
     answer = answers.first
@@ -111,16 +117,14 @@ describe Answer, 'when creating' do
     answer.title.should == @title_text
     answer.major_title.should == @major_title
     answer.minor_title.should == @minor_title
-    answer.asking_member.should == @asking_member
-    answer.question_id.should == @question_id
+    answer.questions.should == questions1
     answer.answering_member.should == @answering_member
     answer.answering_role.should == @answering_role
     answer.answer_paragraphs.should == "<p>#{@answer_initial_paragraph_text}</p><p>#{@answer_2nd_paragraph_text}</p><p>#{@answer_3rd_paragraph_text}</p>"
 
     answer2 = answers[1]
     answer2.title.should == @title_text
-    answer2.asking_member.should == @second_asking_member
-    answer2.question_id.should == @second_question_id
+    answer2.questions.should == questions2
     answer2.answering_member.should == @second_answering_member
     answer2.answering_role.should == nil
     answer2.answer_paragraphs.should == "<p>#{@second_answer_initial_paragraph_text}</p><p>#{@second_answer_2nd_paragraph_text}</p><p>#{@second_answer_3rd_paragraph_text}</p>"
