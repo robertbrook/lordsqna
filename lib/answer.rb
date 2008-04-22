@@ -41,7 +41,8 @@ class Answer
   end
 
   def self.is_a_question_introduction? element
-    contains_named_anchor element, /^wa_qn_\d+$/
+    contains_named_anchor(element, /^wa_qn_\d+$/) ||
+      (!element.inner_text.to_s.strip[/.+ asked the .+:$/].nil?)
   end
 
   def self.find_question_introductions element

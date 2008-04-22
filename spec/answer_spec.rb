@@ -62,6 +62,7 @@ describe Answer, 'when creating' do
   it 'should recognize a question introduction paragraph' do
     assert_question_introduction_true @question_introduction
     assert_question_introduction_true @second_question_introduction
+    assert_question_introduction_true @alternate_question_introduction
 
     assert_question_introduction_false @answer_initial_paragraph
     assert_question_introduction_false @second_answer_initial_paragraph
@@ -268,5 +269,12 @@ describe Answer, 'when creating' do
     @second_answer_3rd_paragraph = %Q|<a name="80403w0001.htm_para3"></a>
       <!--meta name="Speaker" CONTENT="Lord Rooker"-->
       <p><a name="wa_stpa_3"></a><a name="08040380000051"></a>#{@second_answer_3rd_paragraph_text}</p>|
+
+    @alternate_question_introduction = %Q|<p><a name="wa_st_15"></a>
+      <!--meta name="Colno" CONTENT="194"-->
+      <a name="08040380000084"></a>
+      <b><a name="80403w0001.htm_spnew42"></a><b>
+      <a name="80403w0001.htm_spnew43"></a>
+      <a name="08040380000454"></a>Lord Harris of Haringey</b><!--Lord Harris of Haringey--></b><!----> asked the Chairman of Committees:</p>|
   end
 end
