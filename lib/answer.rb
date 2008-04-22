@@ -22,19 +22,19 @@ class Answer
       title = find_title_text(title_element)
 
       find_question_introductions(title_element).inject(answers) do |answers, question_introduction|
-        question_text = find_question_text(question_introduction)
+        question_texts = find_question_texts(question_introduction)
         answer_initial_paragraph = find_answer_initial_paragraph(question_introduction)
 
         paragraph_texts = find_answer_paragraphs_text(answer_initial_paragraph)
-        paragraphs = "<p>#{ paragraph_texts.join('</p><p>') }</p>"
+        paragraphs = make_paragraphs paragraph_texts
 
         answers << Answer.new({
             :title => title,
             :major_title => find_major_title_text(title),
             :minor_title => find_minor_title_text(title),
             :asking_member => find_asking_member(question_introduction),
-            :question => question_text,
-            :question_id => find_question_id(question_text),
+            :question => question_texts.first,
+            :question_id => find_question_ids(question_texts).first,
             :answering_role => find_answering_role(answer_initial_paragraph),
             :answering_member => find_answering_member(answer_initial_paragraph),
             :answer_paragraphs => paragraphs
@@ -76,12 +76,20 @@ class Answer
     element.at('b/b').inner_text.to_s.strip
   end
 
-  def self.find_question_text element
-    element.next_sibling.at('p').inner_text.to_s
+  def self.find_question_texts element
+    element = element.next_sibling
+    paragraph = element ? element.at('p') : nil
+    texts = []
+    while (paragraph && (a = paragraph.at('a')) && (name = a.attributes['name']) && (!name[/wa_qnpa_\d+/].nil?) )
+      texts << paragraph.inner_text.to_s
+      element = element.next_sibling
+      paragraph = element ? element.at('p') : nil
+    end
+    texts
   end
 
-  def self.find_question_id question_text
-    question_text[/\[(.*)\]$/, 1]
+  def self.find_question_ids question_texts
+    question_texts.collect {|t| t[/\[(.*)\]$/, 1]}
   end
 
   def self.find_answering_member element
@@ -153,5 +161,9 @@ class Answer
 
     def self.find_answering_name element
       element.at('b').inner_text.to_s.strip.chomp(':').strip
+    end
+
+    def self.make_paragraphs texts
+      "<p>#{ texts.join('</p><p>') }</p>"
     end
 end

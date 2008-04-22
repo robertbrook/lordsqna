@@ -32,11 +32,16 @@ describe Answer, 'when creating' do
 
   it 'should find question text' do
     p = H(@question_introduction+@question).at('p')
-    Answer.find_question_text(p).should == @question_text
+    Answer.find_question_texts(p).should == [@question_text]
+  end
+
+  it 'should find question text when there are two questions' do
+    p = H(@question_introduction+@two_questions).at('p')
+    Answer.find_question_texts(p).should == [@question1_text, @question2_text]
   end
 
   it 'should find question number' do
-    Answer.find_question_id(@question_text).should == @question_id
+    Answer.find_question_ids([@question_text]).should == [@question_id]
   end
 
   it 'should find question introduction elements' do
@@ -305,5 +310,14 @@ describe Answer, 'when creating' do
     @answer_paragraph_containing_column_break = %Q|<p><a name="wa_st_16"></a>
 <!--meta name="Colno" CONTENT="194"--><a name="08040380000085"></a><b><a name="80403w0001.htm_spmin18"></a><b><a name="80403w0001.htm_spmin19"></a><a name="08040380000455"></a>The Chairman of Committees (Lord Brabazon of Tara):</b><!--Lord Brabazon of Tara--></b><!----> #{@text_before_col_break}
 <notus-date day="3" month="4" year="2008" textmonth="Apr"></notus-date><columnnum><br> <br><a name="column_WA195"></a><b>3 Apr 2008 : Column WA195</b><br> <br></columnnum>#{@text_after_col_break}</p>|
+
+    @question1_text = %Q|How much government funding is being allocated to the development of second-generation biofuels, including cellulosic ethanol, biobutanol and synthetic fuels from biomass; and [HL2711]|
+    @question2_text = %Q|Which biofuel research projects are receiving government funding. [HL2712]|
+    @two_questions = %Q|<ul><a name="08040269000202"></a>
+      <p><a name="wa_qnpa_16"></a>#{@question1_text}</p>
+      </ul>
+      <ul><a name="08040269000203"></a>
+        <p><a name="wa_qnpa_17"></a>#{@question2_text}</p>
+      </ul>|
   end
 end
