@@ -21,8 +21,8 @@ class Answer
     title_elements.inject([]) do |answers, title_element|
       title = find_title_text(title_element)
 
-      find_question_introductions(title_element).inject(answers) do |answers, question_introduction|
-        question_texts = find_question_texts(question_introduction)
+      Question.find_question_introductions(title_element).inject(answers) do |answers, question_introduction|
+        question_texts = Question.find_question_texts(question_introduction)
         answer_initial_paragraph = find_answer_initial_paragraph(question_introduction)
 
         paragraph_texts = find_answer_paragraphs_text(answer_initial_paragraph)
@@ -32,28 +32,15 @@ class Answer
             :title => title,
             :major_title => find_major_title_text(title),
             :minor_title => find_minor_title_text(title),
-            :asking_member => find_asking_member(question_introduction),
+            :asking_member => Question.find_asking_member(question_introduction),
             :question => question_texts.first,
-            :question_id => find_question_ids(question_texts).first,
+            :question_id => Question.find_question_ids(question_texts).first,
             :answering_role => find_answering_role(answer_initial_paragraph),
             :answering_member => find_answering_member(answer_initial_paragraph),
             :answer_paragraphs => paragraphs
         })
       end
     end
-  end
-
-  def self.is_a_question_introduction? element
-    contains_named_anchor(element, /^wa_qn_\d+$/) ||
-      (!element.inner_text.to_s.strip[/.+ asked the .+:$/].nil?)
-  end
-
-  def self.find_question_introductions element
-    introductions = []
-    while (element = element.next_sibling) && (element.name != 'h3')
-      introductions << element if is_a_question_introduction? element
-    end
-    introductions
   end
 
   def self.find_title_elements doc
@@ -70,26 +57,6 @@ class Answer
 
   def self.find_minor_title_text text
     text.split(': ').size > 1 ? text.split(': ').last : nil
-  end
-
-  def self.find_asking_member element
-    element.at('b/b').inner_text.to_s.strip
-  end
-
-  def self.find_question_texts element
-    element = element.next_sibling
-    paragraph = element ? element.at('p') : nil
-    texts = []
-    while (paragraph && (a = paragraph.at('a')) && (name = a.attributes['name']) && (!name[/wa_qnpa_\d+/].nil?) )
-      texts << paragraph.inner_text.to_s
-      element = element.next_sibling
-      paragraph = element ? element.at('p') : nil
-    end
-    texts
-  end
-
-  def self.find_question_ids question_texts
-    question_texts.collect {|t| t[/\[(.*)\]$/, 1]}
   end
 
   def self.find_answering_member element
