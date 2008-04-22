@@ -28,7 +28,10 @@ class Answer
         paragraph_texts = find_answer_paragraphs_text(answer_initial_paragraph)
         paragraphs = "<p>#{ paragraph_texts.join('</p><p>') }</p>"
 
-        answers << Answer.new({ :title => title,
+        answers << Answer.new({
+            :title => title,
+            :major_title => find_major_title_text(title),
+            :minor_title => find_minor_title_text(title),
             :asking_member => find_asking_member(question_introduction),
             :question => question_text,
             :question_id => find_question_id(question_text),
@@ -59,6 +62,14 @@ class Answer
 
   def self.find_title_text element
     element.inner_text.to_s.strip
+  end
+
+  def self.find_major_title_text text
+    text.split(': ').first
+  end
+
+  def self.find_minor_title_text text
+    text.split(': ').size > 1 ? text.split(': ').last : nil
   end
 
   def self.find_asking_member element

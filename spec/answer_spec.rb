@@ -13,6 +13,18 @@ describe Answer, 'when creating' do
     Answer.find_title_text(html).should == @title_text
   end
 
+  it 'should find major title text' do
+    Answer.find_major_title_text(@title_text).should == @major_title
+    Answer.find_major_title_text('Autism').should == 'Autism'
+    Answer.find_major_title_text('British Overseas Territories').should == 'British Overseas Territories'
+  end
+
+  it 'should find minor title text' do
+    Answer.find_minor_title_text(@title_text).should == @minor_title
+    Answer.find_minor_title_text('Autism').should == nil
+    Answer.find_minor_title_text('British Overseas Territories').should == nil
+  end
+
   it 'should find asking member' do
     p = H(@question_introduction)
     Answer.find_asking_member(p).should == @asking_member
@@ -130,6 +142,8 @@ describe Answer, 'when creating' do
     answer = answers.first
     answer.should be_an_instance_of(Answer)
     answer.title.should == @title_text
+    answer.major_title.should == @major_title
+    answer.minor_title.should == @minor_title
     answer.asking_member.should == @asking_member
     answer.question_id.should == @question_id
     answer.answering_member.should == @answering_member
@@ -183,7 +197,9 @@ describe Answer, 'when creating' do
         <a name="08040381000001"></a>
         <i>Thursday 3 April 2008</i></h2>|
 
-    @title_text = 'Agriculture: Disease Testing'
+    @major_title = %Q|Agriculture|
+    @minor_title = %Q|Disease Testing|
+    @title_text = "#{@major_title}: #{@minor_title}"
 
     @title = %Q|<a name="wa_subhd_0"></a>
       <a name="80403w0001.htm_sbhd0"></a>
