@@ -1,6 +1,0 @@
---- 
-vendor/plugins/rspec: 
-  local_branch: braid/git/vendor/plugins/rspec/master
-  type: git
-  branch: master
-  remote: git://github.com/dchelimsky/rspec.git
