@@ -2,9 +2,10 @@ pkg
 doc
 *.log
 *.db
+*.sqlite3
 .DS_Store
 *~
 .autotest
-tmp
-log
+log/[^.]*
+tmp/**/*
 database.yml
