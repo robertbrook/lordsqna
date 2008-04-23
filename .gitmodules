@@ -10,3 +10,6 @@
 [submodule "vendor/plugins/morph"]
 	path = vendor/plugins/morph
 	url = git://github.com/robmckinnon/morph.git
+[submodule "vendor/plugins/haml"]
+	path = vendor/plugins/haml
+	url = git://github.com/nex3/haml.git
