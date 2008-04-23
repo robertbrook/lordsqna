@@ -1,0 +1,19 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  date: 2008-04-23
+  major_subject: MyString
+  member: MyString
+  minor_subject: MyString
+  role: MyString
+  text: MyString
+  title: MyString
+
+two:
+  date: 2008-04-23
+  major_subject: MyString
+  member: MyString
+  minor_subject: MyString
+  role: MyString
+  text: MyString
+  title: MyString
