@@ -15,9 +15,9 @@ class Question
 
     question_texts.each_with_index do |text, i|
       questions << Question.new({
-          :question_text => text,
-          :question_id => question_ids[i],
-          :asking_member => Question.find_asking_member(question_introduction)
+          :text => text,
+          :uin => question_ids[i],
+          :member => Question.find_asking_member(question_introduction)
       })
     end
 

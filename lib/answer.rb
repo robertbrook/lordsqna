@@ -33,11 +33,11 @@ class Answer
         answer = Answer.new({
             :title => title,
             :date => date,
-            :major_title => find_major_title_text(title),
-            :minor_title => find_minor_title_text(title),
-            :answering_role => find_answering_role(answer_initial_paragraph),
-            :answering_member => find_answering_member(answer_initial_paragraph),
-            :answer_paragraphs => paragraphs
+            :major_subject => find_major_title_text(title),
+            :minor_subject => find_minor_title_text(title),
+            :role => find_answering_role(answer_initial_paragraph),
+            :member => find_answering_member(answer_initial_paragraph),
+            :text => paragraphs
         })
 
         questions = Question.create_questions(question_introduction)

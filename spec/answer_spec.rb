@@ -120,20 +120,20 @@ describe Answer, 'when creating' do
     answer.should be_an_instance_of(Answer)
     answer.date.should == Date.parse(@date_text)
     answer.title.should == @title_text
-    answer.major_title.should == @major_title
-    answer.minor_title.should == @minor_title
+    answer.major_subject.should == @major_title
+    answer.minor_subject.should == @minor_title
     answer.questions.should == questions1
-    answer.answering_member.should == @answering_member
-    answer.answering_role.should == @answering_role
-    answer.answer_paragraphs.should == "<p>#{@answer_initial_paragraph_text}</p><p>#{@answer_2nd_paragraph_text}</p><p>#{@answer_3rd_paragraph_text}</p>"
+    answer.member.should == @answering_member
+    answer.role.should == @answering_role
+    answer.text.should == "<p>#{@answer_initial_paragraph_text}</p><p>#{@answer_2nd_paragraph_text}</p><p>#{@answer_3rd_paragraph_text}</p>"
 
     answer2 = answers[1]
     answer2.date.should == Date.parse(@date_text)
     answer2.title.should == @title_text
     answer2.questions.should == questions2
-    answer2.answering_member.should == @second_answering_member
-    answer2.answering_role.should == nil
-    answer2.answer_paragraphs.should == "<p>#{@second_answer_initial_paragraph_text}</p><p>#{@second_answer_2nd_paragraph_text}</p><p>#{@second_answer_3rd_paragraph_text}</p>"
+    answer2.member.should == @second_answering_member
+    answer2.role.should == nil
+    answer2.text.should == "<p>#{@second_answer_initial_paragraph_text}</p><p>#{@second_answer_2nd_paragraph_text}</p><p>#{@second_answer_3rd_paragraph_text}</p>"
   end
 
   it 'should create Answer instance from url' do

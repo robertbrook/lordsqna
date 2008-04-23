@@ -33,14 +33,14 @@ describe Question, 'when creating' do
     questions = Question.create_questions(p)
     questions.size.should == 2
 
-    questions[0].asking_member.should == @asking_member
-    questions[1].asking_member.should == @asking_member
+    questions[0].member.should == @asking_member
+    questions[1].member.should == @asking_member
 
-    questions[0].question_id.should == @question1_id
-    questions[1].question_id.should == @question2_id
+    questions[0].uin.should == @question1_id
+    questions[1].uin.should == @question2_id
 
-    questions[0].question_text.should == @question1_text
-    questions[1].question_text.should == @question2_text
+    questions[0].text.should == @question1_text
+    questions[1].text.should == @question2_text
   end
 
   it 'should find question introduction elements' do
