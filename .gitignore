@@ -5,3 +5,6 @@ doc
 .DS_Store
 *~
 .autotest
+tmp
+log
+database.yml
