@@ -2,6 +2,7 @@ require 'rubygems'
 require 'open-uri'
 require 'hpricot'
 require 'morph'
+require 'date'
 
 class Answer
   include Morph
@@ -17,6 +18,7 @@ class Answer
 
   def self.from_doc doc
     title_elements = find_title_elements(doc)
+    date = find_date(doc)
 
     title_elements.inject([]) do |answers, title_element|
       title = find_title_text(title_element)
@@ -30,6 +32,7 @@ class Answer
 
         answer = Answer.new({
             :title => title,
+            :date => date,
             :major_title => find_major_title_text(title),
             :minor_title => find_minor_title_text(title),
             :answering_role => find_answering_role(answer_initial_paragraph),
@@ -43,6 +46,11 @@ class Answer
         answers << answer
       end
     end
+  end
+
+  def self.find_date doc
+    date = doc.at('meta[@name="Date"]')['content']
+    Date.parse(date)
   end
 
   def self.find_title_elements doc
@@ -125,7 +133,7 @@ class Answer
   private
 
     def self.contains_named_anchor element, pattern
-      (a = element.at('a')) && (name = a.attributes['name']) && !name.to_s[pattern].nil?
+      (a = element.at('a')) && (name = a['name']) && !name.to_s[pattern].nil?
     end
 
     def self.find_answering_name element

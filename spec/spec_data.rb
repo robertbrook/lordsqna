@@ -1,10 +1,9 @@
 def load_spec_data
   @written_answers_title = %Q|<h3 align="center"><a name="08040381000002"></a>Written Answers</h3>|
 
-  @date = %Q|<h2 align="center">
-      <a name="wa_date_0"></a>
-      <a name="08040381000001"></a>
-      <i>Thursday 3 April 2008</i></h2>|
+
+  @date_text = %Q|3 Apr 2008|
+  @date = %Q|<meta name="Date" content="#{@date_text}">|
 
   @major_title = %Q|Agriculture|
   @minor_title = %Q|Disease Testing|

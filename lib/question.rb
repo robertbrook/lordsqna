@@ -45,7 +45,7 @@ class Question
     element = element.next_sibling
     paragraph = element ? element.at('p') : nil
     texts = []
-    while (paragraph && (a = paragraph.at('a')) && (name = a.attributes['name']) && (!name[/wa_qnpa_\d+/].nil?) )
+    while (paragraph && (a = paragraph.at('a')) && (name = a['name']) && (!name[/wa_qnpa_\d+/].nil?) )
       texts << paragraph.inner_text.to_s
       element = element.next_sibling
       paragraph = element ? element.at('p') : nil
@@ -59,7 +59,7 @@ class Question
 
   private
     def self.contains_named_anchor element, pattern
-      (a = element.at('a')) && (name = a.attributes['name']) && !name.to_s[pattern].nil?
+      (a = element.at('a')) && (name = a['name']) && !name.to_s[pattern].nil?
     end
 
 end

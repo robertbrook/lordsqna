@@ -14,6 +14,10 @@ describe Answer, 'when creating' do
     title_elements.first.inner_text.to_s.should == @title_text
   end
 
+  it 'should find date' do
+    Answer.find_date(H(@date)).should == Date.parse(@date_text)
+  end
+
   it 'should find title text' do
     html = H(@title)
     Answer.find_title_text(html).should == @title_text
@@ -102,7 +106,7 @@ describe Answer, 'when creating' do
   it 'should create Answer instance from Hpricot document with two answers' do
     answer = "#{@question_introduction}#{@question}#{@answer_initial_paragraph}#{@answer_2nd_paragraph}#{@answer_3rd_paragraph}"
     second_answer = "#{@second_question_introduction}#{@second_question}#{@second_answer_initial_paragraph}#{@second_answer_2nd_paragraph}#{@second_answer_3rd_paragraph}"
-    html = H("<html>#{@title}#{answer}#{second_answer}</html>")
+    html = H("<html><head>#{@date}</head><body>#{@title}#{answer}#{second_answer}</body></html>")
 
     questions1 = [mock('Question')]
     Question.should_receive(:create_questions).with(html.at("a[@name='#{@question_css_name}']/..")).and_return questions1
@@ -114,6 +118,7 @@ describe Answer, 'when creating' do
     answers.size.should == 2
     answer = answers.first
     answer.should be_an_instance_of(Answer)
+    answer.date.should == Date.parse(@date_text)
     answer.title.should == @title_text
     answer.major_title.should == @major_title
     answer.minor_title.should == @minor_title
@@ -123,6 +128,7 @@ describe Answer, 'when creating' do
     answer.answer_paragraphs.should == "<p>#{@answer_initial_paragraph_text}</p><p>#{@answer_2nd_paragraph_text}</p><p>#{@answer_3rd_paragraph_text}</p>"
 
     answer2 = answers[1]
+    answer2.date.should == Date.parse(@date_text)
     answer2.title.should == @title_text
     answer2.questions.should == questions2
     answer2.answering_member.should == @second_answering_member
