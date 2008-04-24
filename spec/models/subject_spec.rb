@@ -1,11 +1,11 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-describe Question do
+describe Subject do
   before(:each) do
-    @question = Question.new
+    @subject = Subject.new
   end
 
   it "should be valid" do
-    @question.should be_valid
+    @subject.should be_valid
   end
 end

@@ -12,6 +12,15 @@ class AnswerGroups
     from_doc doc, url
   end
 
+  def self.ar_script_generate
+    generate = []
+    generate << AnswerGroups.script_generate.gsub('AnswerGroups','AnswerGroup').sub('date:string','date:date').gsub(/(answers|title):string /,'').gsub('subject:string','subject_id:integer')
+    generate << Answers.script_generate.gsub('Answers','Answer').sub('questions:string','answer_group_id:integer')
+    generate << Questions.script_generate.gsub('Questions','Question')+' answer_id:integer'
+    generate << 'ruby script/destroy rspec_model Subject; ruby script/generate rspec_model Subject name:string'
+    puts generate.join("\n")
+  end
+
   def initialize attributes
     morph(attributes)
   end
@@ -27,7 +36,7 @@ class AnswerGroups
         :url => url,
         :anchor => find_title_anchor_name(title_element),
         :date => date,
-        :major_subject => find_major_title_text(title),
+        :subject => find_major_title_text(title),
         :minor_subject => find_minor_title_text(title),
         :answers => Answers.create_answers(title_element)
       })

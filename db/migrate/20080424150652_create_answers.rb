@@ -1,13 +1,10 @@
 class CreateAnswers < ActiveRecord::Migration
   def self.up
     create_table :answers do |t|
-      t.date :date
-      t.string :major_subject
       t.string :member
-      t.string :minor_subject
+      t.integer :answer_group_id
       t.string :role
       t.string :text
-      t.string :title
 
       t.timestamps
     end

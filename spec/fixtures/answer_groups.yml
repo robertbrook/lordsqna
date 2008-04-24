@@ -1,0 +1,15 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  anchor: MyString
+  date: 2008-04-24
+  minor_subject_id: 1
+  subject_id: 1
+  url: MyString
+
+two:
+  anchor: MyString
+  date: 2008-04-24
+  minor_subject_id: 1
+  subject_id: 1
+  url: MyString

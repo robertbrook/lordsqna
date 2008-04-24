@@ -59,7 +59,7 @@ describe AnswerGroups, 'when creating' do
     group.anchor.should == @title_anchor
     group.date.should == Date.parse(@date_text)
     group.title.should == @title_text
-    group.major_subject.should == @major_title
+    group.subject.should == @major_title
     group.minor_subject.should == @minor_title
     group.answers.size.should == 2
     group.answers[0].should == answer1

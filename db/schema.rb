@@ -9,17 +9,23 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080423170543) do
+ActiveRecord::Schema.define(:version => 20080424150658) do
+
+  create_table "answer_groups", :force => true do |t|
+    t.string   "anchor"
+    t.date     "date"
+    t.integer  "minor_subject_id"
+    t.integer  "subject_id"
+    t.string   "url"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "answers", :force => true do |t|
-    t.string   "date"
-    t.string   "major_subject"
     t.string   "member"
-    t.string   "minor_subject"
-    t.string   "questions"
+    t.integer  "answer_group_id"
     t.string   "role"
     t.string   "text"
-    t.string   "title"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -28,6 +34,13 @@ ActiveRecord::Schema.define(:version => 20080423170543) do
     t.string   "member"
     t.string   "text"
     t.string   "uin"
+    t.integer  "answer_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "subjects", :force => true do |t|
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
