@@ -4,7 +4,7 @@ require 'hpricot'
 require 'morph'
 require 'date'
 
-class Answer
+class Answers
   include Morph
 
   def self.from_url url
@@ -23,14 +23,14 @@ class Answer
     title_elements.inject([]) do |answers, title_element|
       title = find_title_text(title_element)
 
-      Question.find_question_introductions(title_element).inject(answers) do |answers, question_introduction|
-        question_texts = Question.find_question_texts(question_introduction)
+      Questions.find_question_introductions(title_element).inject(answers) do |answers, question_introduction|
+        question_texts = Questions.find_question_texts(question_introduction)
         answer_initial_paragraph = find_answer_initial_paragraph(question_introduction)
 
         paragraph_texts = find_answer_paragraphs_text(answer_initial_paragraph)
         paragraphs = make_paragraphs paragraph_texts
 
-        answer = Answer.new({
+        answer = Answers.new({
             :title => title,
             :date => date,
             :major_subject => find_major_title_text(title),
@@ -40,7 +40,7 @@ class Answer
             :text => paragraphs
         })
 
-        questions = Question.create_questions(question_introduction)
+        questions = Questions.create_questions(question_introduction)
 
         answer.questions = questions
         answers << answer

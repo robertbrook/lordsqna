@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'morph'
 
-class Question
+class Questions
   include Morph
 
   def initialize attributes
@@ -9,15 +9,15 @@ class Question
   end
 
   def self.create_questions question_introduction
-    question_texts = Question.find_question_texts(question_introduction)
-    question_ids = Question.find_question_ids(question_texts)
+    question_texts = Questions.find_question_texts(question_introduction)
+    question_ids = Questions.find_question_ids(question_texts)
     questions = []
 
     question_texts.each_with_index do |text, i|
-      questions << Question.new({
+      questions << Questions.new({
           :text => text,
           :uin => question_ids[i],
-          :member => Question.find_asking_member(question_introduction)
+          :member => Questions.find_asking_member(question_introduction)
       })
     end
 

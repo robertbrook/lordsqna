@@ -1,8 +1,8 @@
-require File.dirname(__FILE__) + '/../lib/question'
+require File.dirname(__FILE__) + '/../lib/questions'
 require File.dirname(__FILE__) + '/spec_data'
 require 'hpricot'
 
-describe Question, 'when creating' do
+describe Questions, 'when creating' do
 
   before :all do
     load_spec_data
@@ -10,27 +10,27 @@ describe Question, 'when creating' do
 
   it 'should find asking member' do
     p = H(@question_introduction)
-    Question.find_asking_member(p).should == @asking_member
+    Questions.find_asking_member(p).should == @asking_member
   end
 
   it 'should find question text' do
     p = H(@question_introduction+@question).at('p')
-    Question.find_question_texts(p).should == [@question_text]
+    Questions.find_question_texts(p).should == [@question_text]
   end
 
   it 'should find question text when there are two questions' do
     p = H(@question_introduction+@two_questions).at('p')
-    Question.find_question_texts(p).should == [@question1_text, @question2_text]
+    Questions.find_question_texts(p).should == [@question1_text, @question2_text]
   end
 
   it 'should find question number' do
-    Question.find_question_ids([@question_text]).should == [@question_id]
+    Questions.find_question_ids([@question_text]).should == [@question_id]
   end
 
-  it 'should create a Question instance for each question' do
+  it 'should create a Questions instance for each question' do
     p = H(@question_introduction+@two_questions).at('p')
 
-    questions = Question.create_questions(p)
+    questions = Questions.create_questions(p)
     questions.size.should == 2
 
     questions[0].member.should == @asking_member
@@ -48,7 +48,7 @@ describe Question, 'when creating' do
     second_answer = @second_question_introduction+@second_question_text+@second_answer_initial_paragraph
     h3 = H(@title+first_answer+second_answer).at('h3')
 
-    introductions = Question.find_question_introductions(h3)
+    introductions = Questions.find_question_introductions(h3)
     introductions.size.should == 2
     introductions[0].inner_text.to_s.strip.should == "#{@asking_member} #{@asked_hmgov}"
     introductions[1].inner_text.to_s.strip.should == "#{@second_asking_member} #{@asked_hmgov}"
@@ -69,7 +69,7 @@ describe Question, 'when creating' do
   end
 
   def assert_question_introduction_true element, expected=be_true
-    Question.is_a_question_introduction?(H(element)).should expected
+    Questions.is_a_question_introduction?(H(element)).should expected
   end
 
   def assert_question_introduction_false element
