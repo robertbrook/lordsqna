@@ -36,4 +36,36 @@ describe AnswerGroups, 'when creating' do
     AnswerGroups.find_minor_title_text('British Overseas Territories').should == nil
   end
 
+  it 'should create AnswerGroup instance from Hpricot document with two answers' do
+    answer = "#{@question_introduction}#{@question}#{@answer_initial_paragraph}#{@answer_2nd_paragraph}#{@answer_3rd_paragraph}"
+    second_answer = "#{@second_question_introduction}#{@second_question}#{@second_answer_initial_paragraph}#{@second_answer_2nd_paragraph}#{@second_answer_3rd_paragraph}"
+    html = H("<html><head>#{@date}</head><body>#{@title}#{answer}#{second_answer}</body></html>")
+
+    answer1 = [mock('Answer')]
+    answer2 = [mock('Answer2')]
+    Answers.should_receive(:create_answers).and_return [answer1, answer2]
+
+    groups = AnswerGroups.from_doc html
+    groups.size.should == 1
+    group = groups.first
+    group.should be_an_instance_of(AnswerGroups)
+    group.date.should == Date.parse(@date_text)
+    group.title.should == @title_text
+    group.major_subject.should == @major_title
+    group.minor_subject.should == @minor_title
+    group.answers.size.should == 2
+    group.answers[0].should == answer1
+    group.answers[1].should == answer2
+  end
+
+  it 'should create answer groups from url' do
+    url = 'url'
+    html = mock('html')
+    doc = mock('doc')
+    AnswerGroups.should_receive(:open).with(url).and_return html
+    AnswerGroups.should_receive(:Hpricot).with(html).and_return doc
+    AnswerGroups.should_receive(:from_doc).with(doc)
+    AnswerGroups.from_url url
+  end
+
 end

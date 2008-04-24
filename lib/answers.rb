@@ -7,44 +7,30 @@ require 'date'
 class Answers
   include Morph
 
-  def self.from_url url
-    doc = Hpricot open(url)
-    from_doc doc
-  end
-
   def initialize attributes
     morph(attributes)
   end
 
-  def self.from_doc doc
-    title_elements = AnswerGroups.find_title_elements(doc)
-    date = AnswerGroups.find_date(doc)
+  def self.create_answers title_element
+    question_introductions = Questions.find_question_introductions(title_element)
 
-    title_elements.inject([]) do |answers, title_element|
-      title = AnswerGroups.find_title_text(title_element)
+    question_introductions.inject([]) do |answers, question_introduction|
+      question_texts = Questions.find_question_texts(question_introduction)
+      answer_initial_paragraph = find_answer_initial_paragraph(question_introduction)
 
-      Questions.find_question_introductions(title_element).inject(answers) do |answers, question_introduction|
-        question_texts = Questions.find_question_texts(question_introduction)
-        answer_initial_paragraph = find_answer_initial_paragraph(question_introduction)
+      paragraph_texts = find_answer_paragraphs_text(answer_initial_paragraph)
+      paragraphs = make_paragraphs paragraph_texts
 
-        paragraph_texts = find_answer_paragraphs_text(answer_initial_paragraph)
-        paragraphs = make_paragraphs paragraph_texts
+      answer = Answers.new({
+          :role => find_answering_role(answer_initial_paragraph),
+          :member => find_answering_member(answer_initial_paragraph),
+          :text => paragraphs
+      })
 
-        answer = Answers.new({
-            :title => title,
-            :date => date,
-            :major_subject => AnswerGroups.find_major_title_text(title),
-            :minor_subject => AnswerGroups.find_minor_title_text(title),
-            :role => find_answering_role(answer_initial_paragraph),
-            :member => find_answering_member(answer_initial_paragraph),
-            :text => paragraphs
-        })
+      questions = Questions.create_questions(question_introduction)
 
-        questions = Questions.create_questions(question_introduction)
-
-        answer.questions = questions
-        answers << answer
-      end
+      answer.questions = questions
+      answers << answer
     end
   end
 

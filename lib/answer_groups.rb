@@ -7,6 +7,31 @@ require 'date'
 class AnswerGroups
   include Morph
 
+  def self.from_url url
+    doc = Hpricot open(url)
+    from_doc doc
+  end
+
+  def initialize attributes
+    morph(attributes)
+  end
+
+  def self.from_doc doc
+    title_elements = find_title_elements(doc)
+    date = find_date(doc)
+
+    title_elements.inject([]) do |groups, title_element|
+      title = find_title_text(title_element)
+      groups << new({
+        :title => title,
+        :date => date,
+        :major_subject => find_major_title_text(title),
+        :minor_subject => find_minor_title_text(title),
+        :answers => Answers.create_answers(title_element)
+      })
+    end
+  end
+
   def self.find_date doc
     date = doc.at('meta[@name="Date"]')['content']
     Date.parse(date)

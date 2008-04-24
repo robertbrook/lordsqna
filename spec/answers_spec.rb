@@ -77,10 +77,10 @@ describe Answers, 'when creating' do
     paragraphs[0].should == "#{@text_before_col_break} #{@text_after_col_break}"
   end
 
-  it 'should create Answer instance from Hpricot document with two answers' do
+  it 'should create Answer instances from Hpricot document with two answers' do
     answer = "#{@question_introduction}#{@question}#{@answer_initial_paragraph}#{@answer_2nd_paragraph}#{@answer_3rd_paragraph}"
     second_answer = "#{@second_question_introduction}#{@second_question}#{@second_answer_initial_paragraph}#{@second_answer_2nd_paragraph}#{@second_answer_3rd_paragraph}"
-    html = H("<html><head>#{@date}</head><body>#{@title}#{answer}#{second_answer}</body></html>")
+    html = H("#{@title}#{answer}#{second_answer}")
 
     questions1 = [mock('Question')]
     Questions.should_receive(:create_questions).with(html.at("a[@name='#{@question_css_name}']/..")).and_return questions1
@@ -88,36 +88,20 @@ describe Answers, 'when creating' do
     questions2 = [mock('Question2')]
     Questions.should_receive(:create_questions).with(html.at("a[@name='#{@second_question_css_name}']/..")).and_return questions2
 
-    answers = Answers.from_doc html
+    answers = Answers.create_answers html.at('h3')
     answers.size.should == 2
     answer = answers.first
     answer.should be_an_instance_of(Answers)
-    answer.date.should == Date.parse(@date_text)
-    answer.title.should == @title_text
-    answer.major_subject.should == @major_title
-    answer.minor_subject.should == @minor_title
     answer.questions.should == questions1
     answer.member.should == @answering_member
     answer.role.should == @answering_role
     answer.text.should == "<p>#{@answer_initial_paragraph_text}</p><p>#{@answer_2nd_paragraph_text}</p><p>#{@answer_3rd_paragraph_text}</p>"
 
     answer2 = answers[1]
-    answer2.date.should == Date.parse(@date_text)
-    answer2.title.should == @title_text
     answer2.questions.should == questions2
     answer2.member.should == @second_answering_member
     answer2.role.should == nil
     answer2.text.should == "<p>#{@second_answer_initial_paragraph_text}</p><p>#{@second_answer_2nd_paragraph_text}</p><p>#{@second_answer_3rd_paragraph_text}</p>"
-  end
-
-  it 'should create Answer instance from url' do
-    url = 'url'
-    html = mock('html')
-    doc = mock('doc')
-    Answers.should_receive(:open).with(url).and_return html
-    Answers.should_receive(:Hpricot).with(html).and_return doc
-    Answers.should_receive(:from_doc).with(doc)
-    Answers.from_url url
   end
 
   def assert_non_initial_answer_true element, expected=be_true
