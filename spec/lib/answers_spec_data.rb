@@ -1,3 +1,5 @@
+module SpecData
+
 def H html
   Hpricot html
 end
@@ -131,4 +133,5 @@ def load_spec_data
     <ul><a name="08040269000203"></a>
       <p><a name="wa_qnpa_17"></a>#{@question2_text}</p>
     </ul>|
+end
 end

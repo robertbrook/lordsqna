@@ -5,6 +5,8 @@ require File.dirname(__FILE__) + '/answers_spec_data'
 
 describe Answers, 'when creating' do
 
+  include SpecData
+
   before :all do
     load_spec_data
   end

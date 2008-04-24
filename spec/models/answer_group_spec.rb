@@ -1,5 +1,5 @@
 require File.dirname(__FILE__) + '/../spec_helper'
-require File.dirname(__FILE__) + '/../lib/answers_spec_data'
+require File.dirname(__FILE__) + '/model_spec_helper'
 
 describe AnswerGroup do
 
@@ -18,54 +18,67 @@ end
 
 describe AnswerGroup, 'when loading' do
 
-  before :all do
-    load_spec_data
-  end
+  include ModelSpecHelper
 
   it 'should ignore unneeded attribute' do
-    lambda { AnswerGroup.load_from(:title => 'Cultural Heritage') }.should_not raise_error
+    lambda { AnswerGroup.create_from(:title => 'title') }.should_not raise_error
   end
 
   it 'should load date' do
-    date = mock('date')
-    group = AnswerGroup.load_from(:date => date)
-    group.date.should == date
+    assert_loads_attribute AnswerGroup, :date
   end
 
   it 'should load url' do
-    url = mock('url')
-    group = AnswerGroup.load_from(:url => url)
-    group.url.should == url
+    assert_loads_attribute AnswerGroup, :url
   end
 
   it 'should load anchor' do
-    anchor = mock('anchor')
-    group = AnswerGroup.load_from(:anchor => anchor)
-    group.anchor.should == anchor
+    assert_loads_attribute AnswerGroup, :anchor
   end
 
   it 'should associate with subject' do
     subject_name, subject = mock('subject'), mock_model(Subject)
-    Subject.should_receive(:find_or_create).with(subject_name).and_return subject
-    group = AnswerGroup.load_from(:subject => subject_name)
+    Subject.should_receive(:find_or_create_from_name).with(subject_name).and_return subject
+    group = AnswerGroup.create_from(:subject => subject_name)
     group.subject.should == subject
   end
 
   it 'should associate with minor subject, when minor subject present' do
     subject_name, subject = mock('subject'), mock_model(Subject)
-    Subject.should_receive(:find_or_create).with(subject_name).and_return subject
-    group = AnswerGroup.load_from(:minor_subject => subject_name)
+    Subject.should_receive(:find_or_create_from_name).with(subject_name).and_return subject
+    group = AnswerGroup.create_from(:minor_subject => subject_name)
     group.minor_subject.should == subject
   end
 
   it 'should create and associate with answers, when answers are present' do
     answer_attributes1, answer_attributes2 = mock(Hash), mock(Hash)
     answer1, answer2 = mock_model(Answer), mock_model(Answer)
-    Answer.should_receive(:load_from).with(answer_attributes1).and_return answer1
-    Answer.should_receive(:load_from).with(answer_attributes2).and_return answer2
-    group = AnswerGroup.load_from(:answers => [answer_attributes1, answer_attributes2])
+    Answer.should_receive(:create_from).with(answer_attributes1).and_return answer1
+    Answer.should_receive(:create_from).with(answer_attributes2).and_return answer2
+    group = AnswerGroup.create_from(:answers => [answer_attributes1, answer_attributes2])
     group.answers.size.should == 2
     group.answers[0].should == answer1
     group.answers[1].should == answer2
+  end
+end
+
+describe AnswerGroup, 'when creating title' do
+
+  before :each do
+    @group = AnswerGroup.new
+    @topic = 'topic'
+    @group.should_receive(:subject).and_return mock_model(Subject, :name => @topic )
+  end
+
+  it 'should use subject name only, if has no minor subject' do
+    @group.should_receive(:minor_subject).and_return nil
+    @group.title.should == @topic
+  end
+
+  it 'should use subject name only, if has no minor subject' do
+    specifics = 'specifics'
+    minor_subject = mock_model(Subject, :name => specifics)
+    @group.should_receive(:minor_subject).twice.and_return minor_subject
+    @group.title.should == "#{@topic}: #{specifics}"
   end
 end

@@ -4,13 +4,17 @@ class AnswerGroup < ActiveRecord::Base
   belongs_to :subject
   belongs_to :minor_subject, :class_name => "Subject"
 
-  def self.load_from data
+  def self.create_from data
     attributes = data.slice(:date, :url, :anchor)
 
     returning AnswerGroup.new(attributes) do |g|
-      g.subject = Subject.find_or_create(data[:subject]) if data[:subject]
-      g.minor_subject = Subject.find_or_create(data[:minor_subject]) if data[:minor_subject]
-      g.answers = data[:answers].collect { |d| Answer.load_from d } if data[:answers]
+      g.subject = Subject.from_name data[:subject] if data[:subject]
+      g.minor_subject = Subject.from_name data[:minor_subject] if data[:minor_subject]
+      g.answers = data[:answers].collect { |d| Answer.create_from d } if data[:answers]
     end
+  end
+
+  def title
+    minor_subject ? "#{subject.name}: #{minor_subject.name}" : subject.name
   end
 end

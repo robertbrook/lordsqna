@@ -4,6 +4,8 @@ require 'hpricot'
 
 describe Questions, 'when creating' do
 
+  include SpecData
+
   before :all do
     load_spec_data
   end
