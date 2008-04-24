@@ -17,9 +17,14 @@ def assert_association_exists model, association_macro, association_name, model_
   begin
     association.klass
   rescue Exception => e
-    unless association.options[:class_name]
+    class_name = association.options[:class_name]
+    unless class_name
       klass = e.to_s[/uninitialized constant .*::(.+)/, 1]
       raise "Could not find class #{klass} for association #{association_name}, try defining :class_name in the #{association_macro} association declaration."
+    else
+      unless class_name.is_a? String
+        raise "Could not define association #{association_name} because the defined :class_name #{class_name} is not a String"
+      end
     end
   end
 
