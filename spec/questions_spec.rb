@@ -1,5 +1,5 @@
 require File.dirname(__FILE__) + '/../lib/questions'
-require File.dirname(__FILE__) + '/spec_data'
+require File.dirname(__FILE__) + '/answers_spec_data'
 require 'hpricot'
 
 describe Questions, 'when creating' do

@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../lib/questions'
 require File.dirname(__FILE__) + '/../lib/answers'
 require File.dirname(__FILE__) + '/../lib/answer_groups'
-require File.dirname(__FILE__) + '/spec_data'
+require File.dirname(__FILE__) + '/answers_spec_data'
 
 describe AnswerGroups, 'when creating' do
 
@@ -24,6 +24,11 @@ describe AnswerGroups, 'when creating' do
     AnswerGroups.find_title_text(html).should == @title_text
   end
 
+  it 'should find title anchor name' do
+    title_element = H(@title).at('h3')
+    AnswerGroups.find_title_anchor_name(title_element).should == @title_anchor
+  end
+
   it 'should find major title text' do
     AnswerGroups.find_major_title_text(@title_text).should == @major_title
     AnswerGroups.find_major_title_text('Autism').should == 'Autism'
@@ -43,12 +48,15 @@ describe AnswerGroups, 'when creating' do
 
     answer1 = [mock('Answer')]
     answer2 = [mock('Answer2')]
-    Answers.should_receive(:create_answers).and_return [answer1, answer2]
+    Answers.should_receive(:create_answers).with(html.at('h3')).and_return [answer1, answer2]
 
-    groups = AnswerGroups.from_doc html
+    url = 'url'
+    groups = AnswerGroups.from_doc html, url
     groups.size.should == 1
     group = groups.first
     group.should be_an_instance_of(AnswerGroups)
+    group.url.should == url
+    group.anchor.should == @title_anchor
     group.date.should == Date.parse(@date_text)
     group.title.should == @title_text
     group.major_subject.should == @major_title
@@ -64,7 +72,7 @@ describe AnswerGroups, 'when creating' do
     doc = mock('doc')
     AnswerGroups.should_receive(:open).with(url).and_return html
     AnswerGroups.should_receive(:Hpricot).with(html).and_return doc
-    AnswerGroups.should_receive(:from_doc).with(doc)
+    AnswerGroups.should_receive(:from_doc).with(doc, url)
     AnswerGroups.from_url url
   end
 

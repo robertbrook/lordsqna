@@ -13,9 +13,10 @@ def load_spec_data
   @minor_title = %Q|Disease Testing|
   @title_text = "#{@major_title}: #{@minor_title}"
 
+  @title_anchor = %Q|08040380000001|
   @title = %Q|<a name="wa_subhd_0"></a>
     <a name="80403w0001.htm_sbhd0"></a>
-    <h3 align="center"><a name="08040380000001"></a>#{@title_text}</h3>|
+    <h3 align="center"><a name="#{@title_anchor}"></a>#{@title_text}</h3>|
 
   @asked_hmgov = "asked Her Majesty's Government:"
 

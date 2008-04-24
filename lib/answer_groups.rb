@@ -9,14 +9,14 @@ class AnswerGroups
 
   def self.from_url url
     doc = Hpricot open(url)
-    from_doc doc
+    from_doc doc, url
   end
 
   def initialize attributes
     morph(attributes)
   end
 
-  def self.from_doc doc
+  def self.from_doc doc, url
     title_elements = find_title_elements(doc)
     date = find_date(doc)
 
@@ -24,6 +24,8 @@ class AnswerGroups
       title = find_title_text(title_element)
       groups << new({
         :title => title,
+        :url => url,
+        :anchor => find_title_anchor_name(title_element),
         :date => date,
         :major_subject => find_major_title_text(title),
         :minor_subject => find_minor_title_text(title),
@@ -43,6 +45,10 @@ class AnswerGroups
 
   def self.find_title_text element
     element.inner_text.to_s.strip
+  end
+
+  def self.find_title_anchor_name title_element
+    (a = title_element.at('a')) && (name = a['name']) ? name : nil
   end
 
   def self.find_major_title_text text
