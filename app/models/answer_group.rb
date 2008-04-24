@@ -17,4 +17,8 @@ class AnswerGroup < ActiveRecord::Base
   def title
     (specifics = minor_subject) ? "#{subject.name}: #{specifics.name}" : subject.name
   end
+
+  def parliament_url
+    "#{url}##{anchor}"
+  end
 end

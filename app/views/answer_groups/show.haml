@@ -1,0 +1,14 @@
+.written_answers
+  %h1= @answer_group.title
+  %p= @answer_group.date
+
+  - @answer_group.answers.each do |answer|
+    .written_answer
+      - answer.questions.each do |question|
+        %div{:id => question.uin.downcase}
+          %p
+            = question_introduction(question)
+          %blockquote
+            = question.text
+      - answer
+= link_to 'Back', answer_groups_path

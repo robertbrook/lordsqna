@@ -1,0 +1,9 @@
+%h1 Written Answers
+
+%table
+  %tbody
+  - @answer_groups.each do |group|
+    %tr
+      %td= link_to_answer_group group
+      %td= link_to_source_file(group)
+      %td= group.date

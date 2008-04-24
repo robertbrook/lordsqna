@@ -82,3 +82,11 @@ describe AnswerGroup, 'when creating title' do
     @group.title.should == "#{@topic}: #{specifics}"
   end
 end
+
+describe AnswerGroup, 'when creating parliament url' do
+
+  it 'should append hash anchor on to url' do
+    answer = AnswerGroup.new :url => 'parliament_url', :anchor=>'anchor_name'
+    answer.parliament_url.should == "parliament_url#anchor_name"
+  end
+end
