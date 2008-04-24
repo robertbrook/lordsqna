@@ -8,7 +8,7 @@ describe Subject do
 
   it 'should find or create from name' do
     name, subject = 'name', mock_model(Subject)
-    Subject.should_receive(:find_or_create_from_name).with(name).and_return subject
+    Subject.should_receive(:find_or_create_by_name).with(name).and_return subject
     Subject.from_name(name).should == subject
 
     Subject.from_name(nil).should == nil

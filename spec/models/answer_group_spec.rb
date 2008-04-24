@@ -38,14 +38,14 @@ describe AnswerGroup, 'when loading' do
 
   it 'should associate with subject' do
     subject_name, subject = mock('subject'), mock_model(Subject)
-    Subject.should_receive(:find_or_create_from_name).with(subject_name).and_return subject
+    Subject.should_receive(:from_name).with(subject_name).and_return subject
     group = AnswerGroup.create_from(:subject => subject_name)
     group.subject.should == subject
   end
 
   it 'should associate with minor subject, when minor subject present' do
     subject_name, subject = mock('subject'), mock_model(Subject)
-    Subject.should_receive(:find_or_create_from_name).with(subject_name).and_return subject
+    Subject.should_receive(:from_name).with(subject_name).and_return subject
     group = AnswerGroup.create_from(:minor_subject => subject_name)
     group.minor_subject.should == subject
   end

@@ -25,15 +25,22 @@ namespace :lordsqna do
   task :clean => [:migrate_down, :migrate_up, :clone_structure] do
   end
 
-  task :load_answers do
+  desc 'loads example data'
+  task :load_answers => :environment do
+    puts 'Loading example data'
     Dir["#{RAILS_ROOT}/data/*"].each do |file|
-      puts 'todo: load '+file
+      groups_data = AnswerGroups.from_url(file)
+      data_hashs = groups_data.collect(&:morph_attributes)
+      data_hashs.each do |data_hash|
+        group = AnswerGroup.create_from(data_hash)
+        group.save!
+      end
     end
   end
 
   desc 'does a clean sweep and loads xml, reindexes with solr'
   task :regenerate => [:migrate_down, :migrate_up, :load_answers] do
-    puts 'Regenerated all data'
+    puts "Loaded #{AnswerGroup.count} answer groups"
   end
 
 end
