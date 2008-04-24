@@ -57,7 +57,7 @@ describe AnswerGroup, 'when loading' do
     group = AnswerGroup.load_from(:minor_subject => subject_name)
     group.minor_subject.should == subject
   end
-=begin
+
   it 'should create and associate with answers, when answers are present' do
     answer_attributes1, answer_attributes2 = mock(Hash), mock(Hash)
     answer1, answer2 = mock_model(Answer), mock_model(Answer)
@@ -68,5 +68,4 @@ describe AnswerGroup, 'when loading' do
     group.answers[0].should == answer1
     group.answers[1].should == answer2
   end
-=end
 end
