@@ -17,4 +17,14 @@ describe AnswerGroupsHelper do # Helper methods can be called directly in the ex
     question = mock_model(Question, :member => 'member')
     question_introduction(question).should == "<span class='asking_member'>member</span> asked Her Majesty's Government:"
   end
+
+  it 'should format answering member role and name' do
+    answer = mock_model(Answer, :role => 'role', :member => 'member')
+    answering_member(answer).should == "<span class='answering'><span class='role'>role</span> (<span class='member'>member</span>):</span>"
+  end
+
+  it 'should format answering member role and name' do
+    answer = mock_model(Answer, :member => 'member', :role => nil)
+    answering_member(answer).should == "<span class='answering'><span class='member'>member</span>:</span>"
+  end
 end

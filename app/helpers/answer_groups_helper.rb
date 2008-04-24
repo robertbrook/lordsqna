@@ -15,4 +15,13 @@ module AnswerGroupsHelper
   def question_introduction question
     "<span class='asking_member'>#{question.member}</span> asked Her Majesty's Government:"
   end
+
+  def answering_member answer
+    answering = ["<span class='answering'>"]
+    answering << "<span class='role'>#{answer.role}</span> (" if answer.role
+    answering << "<span class='member'>#{answer.member}</span>"
+    answering << ")" if answer.role
+    answering << ":</span>"
+    answering.join('')
+  end
 end

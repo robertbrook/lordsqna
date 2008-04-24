@@ -2,17 +2,16 @@
 %html
   %head
     %title Lords Q+A
-    <link rel="stylesheet" href="http://yui.yahooapis.com/2.5.1/build/reset-fonts-grids/reset-fonts-grids.css" type="text/css">
-    <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.5.1/build/assets/skins/sam/skin.css"> 
-    <style type="text/css">#custom-doc { width: 66%; min-width: 740px; font-size:138.5%}</style>
+    - # %link{ :rel=>"stylesheet", :href=>"http://yui.yahooapis.com/2.5.1/build/reset-fonts-grids/reset-fonts-grids.css", :type=>"text/css" }
+    - # %link{ :rel=>"stylesheet", :type=>"text/css", :href=>"http://yui.yahooapis.com/2.5.1/build/assets/skins/sam/skin.css" }
+    %style{ :type=>"text/css"}
+      = "#custom-doc { width: 66%; min-width: 740px; font-size: 1.3em; margin-left: 5em}"
+      = ".asking_member, .answering { font-weight: bold }"
   %body
     #custom-doc.yui-t7
       #hd
-        %h1 Title
+        %h1= @title
       #bd
         %div.yui-g
           = yield
     #ft
-      Footer
-
-

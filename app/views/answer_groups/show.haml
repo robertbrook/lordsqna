@@ -10,5 +10,6 @@
             = question_introduction(question)
           %blockquote
             = question.text
-      - answer
+      = answering_member(answer)
+      = answer.text
 = link_to 'Back', answer_groups_path
