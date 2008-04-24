@@ -15,6 +15,6 @@ class AnswerGroup < ActiveRecord::Base
   end
 
   def title
-    minor_subject ? "#{subject.name}: #{minor_subject.name}" : subject.name
+    (specifics = minor_subject) ? "#{subject.name}: #{specifics.name}" : subject.name
   end
 end

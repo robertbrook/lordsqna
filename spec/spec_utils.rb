@@ -30,4 +30,3 @@ def assert_association_exists model, association_macro, association_name, model_
 
   assert model_with_foreign_key.column_names.include?(association.primary_key_name), "Could not find foreign key '#{association.primary_key_name}' for the association '#{association_name}' in the table for model '#{model_with_foreign_key}'."
 end
-

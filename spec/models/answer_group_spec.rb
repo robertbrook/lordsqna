@@ -78,7 +78,7 @@ describe AnswerGroup, 'when creating title' do
   it 'should use subject name only, if has no minor subject' do
     specifics = 'specifics'
     minor_subject = mock_model(Subject, :name => specifics)
-    @group.should_receive(:minor_subject).twice.and_return minor_subject
+    @group.should_receive(:minor_subject).and_return minor_subject
     @group.title.should == "#{@topic}: #{specifics}"
   end
 end
