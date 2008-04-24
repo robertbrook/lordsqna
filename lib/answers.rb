@@ -17,11 +17,11 @@ class Answers
   end
 
   def self.from_doc doc
-    title_elements = find_title_elements(doc)
-    date = find_date(doc)
+    title_elements = AnswerGroups.find_title_elements(doc)
+    date = AnswerGroups.find_date(doc)
 
     title_elements.inject([]) do |answers, title_element|
-      title = find_title_text(title_element)
+      title = AnswerGroups.find_title_text(title_element)
 
       Questions.find_question_introductions(title_element).inject(answers) do |answers, question_introduction|
         question_texts = Questions.find_question_texts(question_introduction)
@@ -33,8 +33,8 @@ class Answers
         answer = Answers.new({
             :title => title,
             :date => date,
-            :major_subject => find_major_title_text(title),
-            :minor_subject => find_minor_title_text(title),
+            :major_subject => AnswerGroups.find_major_title_text(title),
+            :minor_subject => AnswerGroups.find_minor_title_text(title),
             :role => find_answering_role(answer_initial_paragraph),
             :member => find_answering_member(answer_initial_paragraph),
             :text => paragraphs
@@ -46,27 +46,6 @@ class Answers
         answers << answer
       end
     end
-  end
-
-  def self.find_date doc
-    date = doc.at('meta[@name="Date"]')['content']
-    Date.parse(date)
-  end
-
-  def self.find_title_elements doc
-    (doc/'h3').delete_if {|h| h.inner_text.to_s[/written answers/i]}
-  end
-
-  def self.find_title_text element
-    element.inner_text.to_s.strip
-  end
-
-  def self.find_major_title_text text
-    text.split(': ').first
-  end
-
-  def self.find_minor_title_text text
-    text.split(': ').size > 1 ? text.split(': ').last : nil
   end
 
   def self.find_answering_member element

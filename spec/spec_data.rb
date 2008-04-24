@@ -1,3 +1,7 @@
+def H html
+  Hpricot html
+end
+
 def load_spec_data
   @written_answers_title = %Q|<h3 align="center"><a name="08040381000002"></a>Written Answers</h3>|
 

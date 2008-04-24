@@ -76,8 +76,4 @@ describe Questions, 'when creating' do
     assert_question_introduction_true element, be_false
   end
 
-  def H html
-    Hpricot html
-  end
-
 end
