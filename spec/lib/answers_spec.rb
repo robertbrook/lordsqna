@@ -1,6 +1,6 @@
-require File.dirname(__FILE__) + '/../lib/questions'
-require File.dirname(__FILE__) + '/../lib/answers'
-require File.dirname(__FILE__) + '/../lib/answer_groups'
+require File.dirname(__FILE__) + '/../../lib/questions'
+require File.dirname(__FILE__) + '/../../lib/answers'
+require File.dirname(__FILE__) + '/../../lib/answer_groups'
 require File.dirname(__FILE__) + '/answers_spec_data'
 
 describe Answers, 'when creating' do
