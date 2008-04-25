@@ -1,2 +1,11 @@
-#custom-doc { width: 66%; min-width: 740px; font-size: 1.3em; margin-left: 5em}
+#custom-doc { width: 66%; min-width: 740px; font-size:153.9%;}
 .asking_member, .answering { font-weight: bold }
+
+#hd, #ft {margin: 1em 0;padding: 1em 0;}
+#hd {border-bottom: 1pt solid gray;}
+h1 {font-weight:bold;color:gray;}
+.question {margin: 1em 0;}
+
+.member {font-weight:bold;}
+.text {}
+.uin {font-size:85%;color:gray;}

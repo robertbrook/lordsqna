@@ -1,2 +1,13 @@
+
+
+#questions
 - for question in @questions  
-  = question.text
+  .question
+    %span.member 
+      = question.member
+    %span.text
+      = question.text
+    %span.uin
+      = question.uin
+    %span.uin
+      = question.answer.to_yaml
