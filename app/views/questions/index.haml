@@ -1,13 +1,19 @@
 
 
 #questions
-- for question in @questions  
-  .question
-    %span.member 
-      = question.member
-    %span.text
-      = question.text
-    %span.uin
-      = question.uin
-    %span.uin
-      = question.answer.to_yaml
+- for question in @questions 
+  #question 
+    .question
+      %span.member 
+        = question.member
+      %span.text
+        = question.text
+      %span.uin
+        = question.uin
+    .answer
+      %span.role 
+        = question.answer.role
+      %span.member
+        = question.answer.member
+      %blockquote.text
+        = question.answer.text

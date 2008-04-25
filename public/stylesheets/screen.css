@@ -4,8 +4,16 @@
 #hd, #ft {margin: 1em 0;padding: 1em 0;}
 #hd {border-bottom: 1pt solid gray;}
 h1 {font-weight:bold;color:gray;}
+#question {margin: 1em 0;border-bottom: 1pt solid gray;}
 .question {margin: 1em 0;}
+.answer {margin: 1em 0;}
 
-.member {font-weight:bold;}
-.text {}
-.uin {font-size:85%;color:gray;}
+.question .member {font-weight:bold;}
+.question .text {}
+.question .uin {font-size:85%;color:gray;}
+
+.answer .role {font-style:italic;}
+.answer .member {font-weight:bold;}
+.answer .text {}
+
+p {margin: 1em 0;}
