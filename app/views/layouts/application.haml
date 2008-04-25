@@ -2,11 +2,9 @@
 %html
   %head
     %title Lords Q+A
-    - # %link{ :rel=>"stylesheet", :href=>"http://yui.yahooapis.com/2.5.1/build/reset-fonts-grids/reset-fonts-grids.css", :type=>"text/css" }
-    - # %link{ :rel=>"stylesheet", :type=>"text/css", :href=>"http://yui.yahooapis.com/2.5.1/build/assets/skins/sam/skin.css" }
-    %style{ :type=>"text/css"}
-      = "#custom-doc { width: 66%; min-width: 740px; font-size: 1.3em; margin-left: 5em}"
-      = ".asking_member, .answering { font-weight: bold }"
+    = stylesheet_link_tag "http://yui.yahooapis.com/2.5.1/build/reset-fonts-grids/reset-fonts-grids.css"
+    = stylesheet_link_tag "http://yui.yahooapis.com/2.5.1/build/assets/skins/sam/skin.css"
+    = stylesheet_link_tag "screen"
   %body
     #custom-doc.yui-t7
       #hd

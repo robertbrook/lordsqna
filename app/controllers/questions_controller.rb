@@ -1,6 +1,7 @@
 class QuestionsController < ApplicationController 
 
 def index 
+  @title = "Questions"
 @questions = Question.find(:all) 
 respond_to do |format| 
 format.html # index.rhtml 
