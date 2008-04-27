@@ -27,4 +27,12 @@ describe AnswerGroupsHelper do # Helper methods can be called directly in the ex
     answer = mock_model(Answer, :member => 'member', :role => nil)
     answering_member(answer).should == "<span class='answering'><span class='member'>member</span>:</span>"
   end
+
+  it 'should format answer' do
+    first_paragraph = %Q|Plithy|
+    answer = mock_model(Answer, :text => "<p>#{first_paragraph}</p><p>response</p>")
+    member = '<span>member:</span>'
+    should_receive(:answering_member).with(answer).and_return member
+    format_answer(answer).should == "<p>#{member} #{first_paragraph}</p><p>response</p>"
+  end
 end

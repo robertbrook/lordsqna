@@ -1,4 +1,4 @@
-- @title = @answer_group.title
+- @title = link_to_subjects(@answer_group)
 .written_answers
   %p= @answer_group.date
 
@@ -10,6 +10,5 @@
             = question_introduction(question)
           %blockquote
             = question.text
-      = answering_member(answer)
-      = answer.text
+      = format_answer(answer)
 = link_to 'Back', answer_groups_path

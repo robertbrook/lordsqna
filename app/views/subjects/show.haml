@@ -1,0 +1,8 @@
+- @title = @subject.name
+.related
+  %ul
+    - @subject.answer_groups.group_by(&:minor_subject).each do |subject, group|
+      %li
+        = link_to subject.name, answer_group_path(group) if subject
+
+%p= link_to 'All written answers', answer_groups_path

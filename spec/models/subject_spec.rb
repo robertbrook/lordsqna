@@ -6,6 +6,10 @@ describe Subject do
     assert_model_has_many Subject, :answer_groups
   end
 
+  it 'should have many answer groups' do
+    assert_model_has_many Subject, :minor_answer_groups
+  end
+
   it 'should find or create from name' do
     name, subject = 'name', mock_model(Subject)
     Subject.should_receive(:find_or_create_by_name).with(name).and_return subject
